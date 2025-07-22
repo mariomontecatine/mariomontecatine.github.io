@@ -1,179 +1,112 @@
 <!DOCTYPE HTML>
 <html>
-	<head>
-		<title>Editorial by HTML5 UP</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<!-- Leaflet CSS -->
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-		<style>
-		  /* Altura obligatoria para el mapa */
-		  #map {
-			height: 500px;
-			border-radius: 8px;
-			margin-top: 1.5em;
-		  }
-		</style>
-	</head>
-	<body class="is-preload">
+<head>
+  <title>Mapa de países visitados</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    crossorigin=""
+  />
+  <style>
+    #map {
+      height: 500px;
+      border-radius: 8px;
+      margin-top: 1.5em;
+    }
+  </style>
+</head>
+<body class="is-preload">
+  <div id="wrapper">
+    <div id="main">
+      <div class="inner">
+        <header id="header">
+          <a href="index.html" class="logo"><strong>Editorial</strong> by HTML5 UP</a>
+          <!-- Aquí tus íconos y menú -->
+        </header>
 
-		<!-- Wrapper -->
-		<div id="wrapper">
+        <section>
+          <header class="major">
+            <h2>Países que he visitado</h2>
+          </header>
+          <div id="map"></div>
+        </section>
+      </div>
+    </div>
+    <!-- Sidebar aquí -->
+  </div>
 
-			<!-- Main -->
-			<div id="main">
-				<div class="inner">
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-					<!-- Header -->
-					<header id="header">
-						<a href="index.html" class="logo"><strong>Editorial</strong> by HTML5 UP</a>
-						<ul class="icons">
-							<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="https://www.instagram.com/mariomontecatine/" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-							<li>
-								<a href="https://github.com/mariomontecatine" class="icon brands fa-github" target="_blank" rel="noopener">
-								  <span class="label">GitHub</span>
-								</a>
-							</li>
-						</ul>
-					</header>
+  <script>
+    // Inicializamos el mapa centrado y con zoom global
+    const map = L.map("map").setView([20, 0], 2);
 
-					<!-- Section for Map -->
-					<section>
-						<header class="major">
-							<h2>Países que he visitado</h2>
-						</header>
-						<div id="map"></div>
-					</section>
-				</div>
-			</div>
+    // Añadimos capa base OpenStreetMap
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
 
-			<!-- Sidebar -->
-			<div id="sidebar">
-				<div class="inner">
-					<!-- Search -->
-					<section id="search" class="alt">
-						<form method="post" action="#">
-							<input type="text" name="query" id="query" placeholder="Search" />
-						</form>
-					</section>
+    // Lista ISO_A3 de países visitados
+    const visitedCountries = ["ESP", "FRA", "ITA", "USA", "ARG"];
 
-					<!-- Menu -->
-					<nav id="menu">
-						<header class="major">
-							<h2>Menu</h2>
-						</header>
-						<ul>
-							<li><a href="index.html">Home</a></li>
-							<li><a href="about.html">About me</a></li>
-							<li><a href="blog.html">Blog</a></li>
-							<li>
-								<span class="opener">Projects</span>
-								<ul>
-									<li><a href="opensource.html">Open Source Project</a></li>
-								</ul>
-							</li>
-							<li><a href="elements.html">Elements</a></li>
-						</ul>
-					</nav>
+    // Cargamos GeoJSON de países (sólo fronteras)
+    axios
+      .get(
+        "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json"
+      )
+      .then((response) => {
+        const countriesGeoJSON = response.data;
 
-					<!-- Section -->
-					<section>
-						<header class="major">
-							<h2>Get in touch</h2>
-						</header>
-						<p>Sed varius enim lorem ullamcorper dolore aliquam aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin sed aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>
-						<ul class="contact">
-							<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
-							<li class="icon solid fa-phone">(000) 000-0000</li>
-							<li class="icon solid fa-home">1234 Somewhere Road #8254<br />
-							Nashville, TN 00000-0000</li>
-						</ul>
-					</section>
+        // Estilo para países visitados o no visitados
+        function style(feature) {
+          return {
+            fillColor: visitedCountries.includes(feature.properties.ISO_A3)
+              ? "#0077ff"
+              : "#cccccc",
+            weight: 1,
+            opacity: 1,
+            color: "white",
+            dashArray: "3",
+            fillOpacity: visitedCountries.includes(feature.properties.ISO_A3)
+              ? 0.7
+              : 0.2,
+          };
+        }
 
-					<!-- Footer -->
-					<footer id="footer">
-						<p class="copyright">&copy; Untitled. All rights reserved. Demo Images: <a href="https://unsplash.com">Unsplash</a>. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
-					</footer>
-				</div>
-			</div>
-		</div>
+        // Función para mostrar tooltip con nombre
+        function onEachFeature(feature, layer) {
+          layer.bindTooltip(feature.properties.ADMIN, {
+            sticky: true,
+          });
 
-		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+          // Opcional: efecto al pasar el ratón
+          layer.on({
+            mouseover: (e) => {
+              e.target.setStyle({
+                weight: 3,
+                color: "#666",
+                fillOpacity: 0.9,
+              });
+            },
+            mouseout: (e) => {
+              geojson.resetStyle(e.target);
+            },
+          });
+        }
 
-		<!-- Leaflet JS -->
-		<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-		<script>
-			const map = L.map('map').setView([20, 0], 2);
-
-			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: '© OpenStreetMap contributors'
-			}).addTo(map);
-
-			// Lista de países visitados en formato ISO_A3
-			const visitedCountries = ['ESP', 'FRA', 'ITA', 'USA', 'ARG'];
-
-			axios.get('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-				.then(response => {
-					// Este JSON es TopoJSON, no GeoJSON, necesitamos convertirlo:
-					const topojson = window.topojson;
-					if (!topojson) {
-						console.error('TopoJSON library no cargada, cargándola...');
-						const script = document.createElement('script');
-						script.src = 'https://unpkg.com/topojson-client@3/dist/topojson.min.js';
-						script.onload = () => cargarMapa(response.data);
-						document.head.appendChild(script);
-					} else {
-						cargarMapa(response.data);
-					}
-				})
-				.catch(err => {
-					console.error('Error loading TopoJSON:', err);
-				});
-
-			function cargarMapa(world) {
-				// Convertimos TopoJSON a GeoJSON
-				const countriesGeoJson = topojson.feature(world, world.objects.countries);
-
-				L.geoJSON(countriesGeoJson, {
-					style: feature => {
-						// OJO: Este dataset usa id numérico, no ISO_A3, mapearemos a ISO_A3 abajo
-						// Para simplicidad, colorearemos algunos ids de países comunes:
-
-						const id = feature.id; // numérico
-						// Mapa simplificado id => ISO_A3
-						const idToISO = {
-							840: 'USA', // USA
-							250: 'FRA', // Francia
-							380: 'ITA', // Italia
-							724: 'ESP', // España
-							32: 'ARG'   // Argentina
-						};
-
-						const iso = idToISO[id];
-						const isVisited = iso && visitedCountries.includes(iso);
-
-						return {
-							color: isVisited ? '#0077ff' : '#ccc',
-							weight: 1,
-							fillOpacity: isVisited ? 0.7 : 0.1,
-							fillColor: isVisited ? '#0077ff' : '#eee'
-						};
-					},
-					onEachFeature: (feature, layer) => {
-						layer.bindPopup(`Country ID: ${feature.id}`);
-					}
-				}).addTo(map);
-			}
-		</script>
-
-	</body>
+        // Añadimos la capa GeoJSON
+        const geojson = L.geoJson(countriesGeoJSON, {
+          style: style,
+          onEachFeature: onEachFeature,
+        }).addTo(map);
+      })
+      .catch((error) => {
+        console.error("Error cargando GeoJSON:", error);
+      });
+  </script>
+</body>
 </html>
