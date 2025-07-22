@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Países que he visitado</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 600px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌍 Países que he visitado</h1>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script>
+    // Inicializa el mapa
+    const map = L.map('map').setView([20, 0], 2); // Vista global
+
+    // Añade tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Lista de países visitados (códigos ISO 3166-1 alpha-3)
+    const visitedCountries = ['ESP', 'FRA', 'ITA', 'USA', 'ARG'];
+
+    // Carga GeoJSON de países
+    axios.get('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
+      .then(response => {
+        const countries = response.data;
+
+        L.geoJSON(countries, {
+          style: feature => ({
+            color: visitedCountries.includes(feature.properties.ISO_A3) ? '#0077ff' : '#ccc',
+            weight: 1,
+            fillOpacity: visitedCountries.includes(feature.properties.ISO_A3) ? 0.6 : 0.1
+          }),
+          onEachFeature: (feature, layer) => {
+            layer.bindPopup(`<strong>${feature.properties.ADMIN}</strong>`);
+          }
+        }).addTo(map);
+      });
+  </script>
+
+</body>
+</html>
