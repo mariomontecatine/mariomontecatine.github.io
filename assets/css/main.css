@@ -1247,6 +1247,8 @@ input[type="radio"] + label:before {
 a.image {
   overflow: hidden; }
   a.image img {
+    max-width: 200px;
+    height: auto;
     -moz-transition: -moz-transform 0.2s ease;
     -webkit-transition: -webkit-transform 0.2s ease;
     -ms-transition: -ms-transform 0.2s ease;
