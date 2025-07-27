@@ -1,5 +1,5 @@
 var map_cfg = {
-    "mapWidth": "90%",
+    "mapWidth": "100%",
     "mapHeight": 400,
 
     "shadowWidth": 2,
