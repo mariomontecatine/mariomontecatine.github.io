@@ -1,40 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Mapa de países visitados</title>
-  <style>
-    svg path {
-      fill: #ccc; /* color base */
-      stroke: #fff;
-      stroke-width: 0.5;
-    }
-
-    .visited {
-      fill: #4caf50; /* color para países visitados */
-    }
-  </style>
+  <link href="/fla-map/map.css" rel="stylesheet">
 </head>
 <body>
-  <h2>Mapa de países visitados</h2>
+  <h1>Mapa de países visitados</h1>
 
-  <!-- Mapa SVG -->
-  <object type="image/svg+xml" data="https://upload.wikimedia.org/wikipedia/commons/8/80/BlankMap-World.svg" id="mapa" width="100%" height="600"></object>
+  <!-- contenedor del mapa -->
+  <div id="map-container"></div>
+
+  <!-- scripts del mapa -->
+  <script src="/map/raphael.min.js"></script>
+  <script src="/map/settings.js"></script>
+  <script src="/map/paths.js"></script>
+  <script src="/map/map.js"></script>
 
   <script>
-    const visitedCountries = ['FR', 'ES', 'IT', 'US']; // ISO 3166-1 alpha-2 códigos de país
-
-    // Esperar a que el mapa SVG se cargue
-    document.getElementById('mapa').addEventListener('load', function () {
-      const svgDoc = this.contentDocument;
-
-      visitedCountries.forEach(code => {
-        const country = svgDoc.getElementById(code);
-        if (country) {
-          country.classList.add('visited');
-        }
-      });
-    });
+    var map = new FlaMap(map_cfg);
+    map.drawOnDomReady('map-container');
   </script>
 </body>
 </html>

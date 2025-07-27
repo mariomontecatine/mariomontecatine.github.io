@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+	
+<title>Responsive Preview</title>
+	
+</head>
+
+<body style="background-color:#fff;">
+
+
+<div style="max-width:780px;margin:auto;">
+
+<!-- start Fla-shop.com HTML5 Map -->
+	<div id='map-container'></div>
+	<link href="map.css" rel="stylesheet">
+	<script src="raphael.min.js"></script>
+	<script src="settings.js"></script>
+	<script src="paths.js"></script>    
+	<script src="map.js"></script>
+	<script>
+	var map = new FlaMap(map_cfg);
+	map.drawOnDomReady('map-container');
+	</script>
+<!-- end HTML5 Map -->
+
+</div>
+
+
+
+</body>
+</html>
