@@ -44,7 +44,9 @@
                 </header>
 
                 <!-- Form -->
-                <h3>Form</h3>
+                <h1>Contact Form</h1>
+                <h2>Este formulario aún no está terminado y, por ahora, no funciona. Si necesitas contactarme, puedes
+                    hacerlo a través de mi LinkedIn o Instagram, disponibles en la esquina superior derecha.</h2>
 
                 <form method="post" action="#">
                     <div class="row gtr-uniform">
@@ -64,27 +66,11 @@
                                 <option value="1">Human Resources</option>
                             </select>
                         </div>
-                        <!-- Break -->
-                        <div class="col-4 col-12-small">
-                            <input type="radio" id="demo-priority-low" name="demo-priority" checked>
-                            <label for="demo-priority-low">Low</label>
-                        </div>
-                        <div class="col-4 col-12-small">
-                            <input type="radio" id="demo-priority-normal" name="demo-priority">
-                            <label for="demo-priority-normal">Normal</label>
-                        </div>
-                        <div class="col-4 col-12-small">
-                            <input type="radio" id="demo-priority-high" name="demo-priority">
-                            <label for="demo-priority-high">High</label>
-                        </div>
+
                         <!-- Break -->
                         <div class="col-6 col-12-small">
-                            <input type="checkbox" id="demo-copy" name="demo-copy">
-                            <label for="demo-copy">Email me a copy</label>
-                        </div>
-                        <div class="col-6 col-12-small">
-                            <input type="checkbox" id="demo-human" name="demo-human" checked>
-                            <label for="demo-human">I am a human</label>
+                            <altcha-widget id="altcha" challengeurl="http://localhost:8000/altcha" debug
+                                test></altcha-widget>
                         </div>
                         <!-- Break -->
                         <div class="col-12">
@@ -166,6 +152,8 @@
     <script src="assets/js/breakpoints.min.js"></script>
     <script src="assets/js/util.js"></script>
     <script src="assets/js/main.js"></script>
+
+    <script async defer src="altcha-main/altcha.js" type="module"></script>
 
 </body>
 
