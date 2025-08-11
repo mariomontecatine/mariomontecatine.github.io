@@ -1,684 +1,771 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
-  "http://www.w3.org/TR/html4/loose.dtd">  
-<html > 
-<head><title></title> 
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
-<meta name="generator" content="TeX4ht (https://tug.org/tex4ht/)"> 
-<meta name="originator" content="TeX4ht (https://tug.org/tex4ht/)"> 
-<!-- html --> 
-<meta name="src" content="main.tex"> 
-<link rel="stylesheet" type="text/css" href="main.css"> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+      <title></title>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+      <meta name="generator" content="TeX4ht (https://tug.org/tex4ht/)">
+      <meta name="originator" content="TeX4ht (https://tug.org/tex4ht/)">
+      <!-- html -->
+      <meta name="src" content="main.tex">
+      <link rel="stylesheet" type="text/css" href="main.css">
 </head>
+
 <body>
-<!--l. 21--><p class="noindent" >
-                                                                                 
-                                                                                 
-<!--l. 23--><p class="noindent" ><img class="imagemain" 
-src="images/uclouvain.jpg" alt="PIC" >
-<!--l. 26--><p class="noindent" ><span 
-class="cmbx-12x-x-172">Metasploit Framework</span>
-<!--l. 29--><p class="noindent" ><span 
-class="cmti-12x-x-172">Open Source Project</span><br />
-<span 
-class="cmti-12x-x-172">(LINFO2402)</span>
-<!--l. 32--><p class="noindent" ><span 
-class="cmr-17">Mario Montecatine Ibarrondo</span>
-<!--l. 34--><p class="noindent" ><span 
-class="cmbx-12">04382410</span>
-<!--l. 37--><p class="noindent" >Monday 11<sup class="textsuperscript"><span 
-class="cmr-10x-x-109">th</span></sup>&#x00A0;August, 2025
-                                                                                 
-                                                                                 
-   <h3 class="likesectionHead"><a 
- id="x1-1000"></a>Contents</h3>
-   <div class="tableofcontents">
-   &#x00A0;<span class="sectionToc" >1 <a 
-href="#x1-20001" id="QQ2-1-2">Introduction</a></span>
-<br />   &#x00A0;<span class="sectionToc" >2 <a 
-href="#x1-30002" id="QQ2-1-3">Project Description</a></span>
-<br />   &#x00A0;&#x00A0;<span class="subsectionToc" >2.1 <a 
-href="#x1-40002.1" id="QQ2-1-4">Objectives</a></span>
-<br />   &#x00A0;&#x00A0;<span class="subsectionToc" >2.2 <a 
-href="#x1-50002.2" id="QQ2-1-5">Scope</a></span>
-<br />   &#x00A0;&#x00A0;<span class="subsectionToc" >2.3 <a 
-href="#x1-60002.3" id="QQ2-1-6">Challenges</a></span>
-<br />   &#x00A0;<span class="sectionToc" >3 <a 
-href="#x1-70003" id="QQ2-1-7">The Metasploit Journey</a></span>
-<br />   &#x00A0;&#x00A0;<span class="subsectionToc" >3.1 <a 
-href="#x1-80003.1" id="QQ2-1-8">Providing Documentation</a></span>
-<br />   &#x00A0;&#x00A0;<span class="subsectionToc" >3.2 <a 
-href="#x1-90003.2" id="QQ2-1-13">Code Review and Community Involvement</a></span>
-<br />   &#x00A0;&#x00A0;<span class="subsectionToc" >3.3 <a 
-href="#x1-100003.3" id="QQ2-1-18">Learning</a></span>
-<br />   &#x00A0;&#x00A0;<span class="subsectionToc" >3.4 <a 
-href="#x1-110003.4" id="QQ2-1-19">Metasploitable3</a></span>
-<br />   &#x00A0;<span class="sectionToc" >4 <a 
-href="#x1-160004" id="QQ2-1-33">Conclusion</a></span>
-   </div>
-<!--l. 43--><p class="indent" >
-                                                                                 
-                                                                                 
-   <div 
-class="abstract" 
->
-   <h3 class="abstracttitle">
-<span 
-class="cmbx-10x-x-109">Abstract</span>
-</h3>
-      <!--l. 46--><p class="noindent" ><span 
-class="cmr-10x-x-109">This work presents a year-long contribution to the Metasploit Framework,</span>
-      <span 
-class="cmr-10x-x-109">focusing  on  documentation,  code  review,  and  vulnerability  exploitation.</span>
-      <span 
-class="cmr-10x-x-109">Efforts   included   creating   official   module   documentation,   improving</span>
-      <span 
-class="cmr-10x-x-109">password-cracking utilities, and enhancing usability through targeted fixes.</span>
-      <span 
-class="cmr-10x-x-109">Practical skills were developed by reproducing and documenting real-world</span>
-      <span 
-class="cmr-10x-x-109">vulnerabilities  on  Metasploitable3,  including  remote  code  execution,  SQL</span>
-      <span 
-class="cmr-10x-x-109">injection, and credential exposure. The project demonstrates the technical</span>
-      <span 
-class="cmr-10x-x-109">and collaborative expertise required for effective participation in a large-scale,</span>
-      <span 
-class="cmr-10x-x-109">open-source cybersecurity tool.</span>
-</div>
-   <h3 class="sectionHead"><span class="titlemark">1   </span> <a 
- id="x1-20001"></a>Introduction</h3>
-<!--l. 51--><p class="noindent" >This project focuses on contributing to the open-source community through the
-Metasploit Framework, a widely used platform for penetration testing and exploit
-development. The goal is to collaborate by improving module documentation, following
-community guidelines, and gaining hands-on experience with cybersecurity tools and
-open-source workflows.
-<!--l. 53--><p class="noindent" >
-   <h3 class="sectionHead"><span class="titlemark">2   </span> <a 
- id="x1-30002"></a>Project Description</h3>
-<!--l. 55--><p class="noindent" >As I said bebore, The Metasploit Framework is one of the most well-known open source
-penetration testing platforms. Maintained by Rapid7 and a global community of
-contributors, it aims to provide security professionals, researchers, and enthusiasts with a
-modular and extensible environment for developing, testing, and executing exploit code
-against remote targets.
-<!--l. 57--><p class="noindent" >
-   <h4 class="subsectionHead"><span class="titlemark">2.1   </span> <a 
- id="x1-40002.1"></a>Objectives</h4>
-<!--l. 58--><p class="noindent" >The main objectives of the Metasploit Framework are:
+      <header>
+            <a href="index.html"><strong>Portfolio</strong> by Mario</a>
+      </header>
+      <!--l. 21-->
+      <p class="noindent">
+
+
+            <!--l. 23-->
+      <p class="noindent"><img class="imagemain" src="images/uclouvain.jpg" alt="PIC">
+            <!--l. 26-->
+      <p class="noindent"><span class="cmbx-12x-x-172">Metasploit Framework</span>
+            <!--l. 29-->
+      <p class="noindent"><span class="cmti-12x-x-172">Open Source Project</span><br />
+            <span class="cmti-12x-x-172">(LINFO2402)</span>
+            <!--l. 32-->
+      <p class="noindent"><span class="cmr-17">Mario Montecatine Ibarrondo</span>
+            <!--l. 34-->
+      <p class="noindent"><span class="cmbx-12">04382410</span>
+            <!--l. 37-->
+      <p class="noindent">Monday 11<sup class="textsuperscript"><span
+                        class="cmr-10x-x-109">th</span></sup>&#x00A0;August, 2025
+
+
+      <h3 class="likesectionHead"><a id="x1-1000"></a>Contents</h3>
+      <div class="tableofcontents">
+            &#x00A0;<span class="sectionToc">1 <a href="#x1-20001" id="QQ2-1-2">Introduction</a></span>
+            <br /> &#x00A0;<span class="sectionToc">2 <a href="#x1-30002" id="QQ2-1-3">Project Description</a></span>
+            <br /> &#x00A0;&#x00A0;<span class="subsectionToc">2.1 <a href="#x1-40002.1"
+                        id="QQ2-1-4">Objectives</a></span>
+            <br /> &#x00A0;&#x00A0;<span class="subsectionToc">2.2 <a href="#x1-50002.2" id="QQ2-1-5">Scope</a></span>
+            <br /> &#x00A0;&#x00A0;<span class="subsectionToc">2.3 <a href="#x1-60002.3"
+                        id="QQ2-1-6">Challenges</a></span>
+            <br /> &#x00A0;<span class="sectionToc">3 <a href="#x1-70003" id="QQ2-1-7">The Metasploit Journey</a></span>
+            <br /> &#x00A0;&#x00A0;<span class="subsectionToc">3.1 <a href="#x1-80003.1" id="QQ2-1-8">Providing
+                        Documentation</a></span>
+            <br /> &#x00A0;&#x00A0;<span class="subsectionToc">3.2 <a href="#x1-90003.2" id="QQ2-1-13">Code Review and
+                        Community Involvement</a></span>
+            <br /> &#x00A0;&#x00A0;<span class="subsectionToc">3.3 <a href="#x1-100003.3"
+                        id="QQ2-1-18">Learning</a></span>
+            <br /> &#x00A0;&#x00A0;<span class="subsectionToc">3.4 <a href="#x1-110003.4"
+                        id="QQ2-1-19">Metasploitable3</a></span>
+            <br /> &#x00A0;<span class="sectionToc">4 <a href="#x1-160004" id="QQ2-1-33">Conclusion</a></span>
+      </div>
+      <!--l. 43-->
+      <p class="indent">
+
+
+      <div class="abstract">
+            <h3 class="abstracttitle">
+                  <span class="cmbx-10x-x-109">Abstract</span>
+            </h3>
+            <!--l. 46-->
+            <p class="noindent"><span class="cmr-10x-x-109">This work presents a year-long contribution to the
+                        Metasploit Framework,</span>
+                  <span class="cmr-10x-x-109">focusing on documentation, code review, and vulnerability
+                        exploitation.</span>
+                  <span class="cmr-10x-x-109">Efforts included creating official module documentation, improving</span>
+                  <span class="cmr-10x-x-109">password-cracking utilities, and enhancing usability through targeted
+                        fixes.</span>
+                  <span class="cmr-10x-x-109">Practical skills were developed by reproducing and documenting
+                        real-world</span>
+                  <span class="cmr-10x-x-109">vulnerabilities on Metasploitable3, including remote code execution,
+                        SQL</span>
+                  <span class="cmr-10x-x-109">injection, and credential exposure. The project demonstrates the
+                        technical</span>
+                  <span class="cmr-10x-x-109">and collaborative expertise required for effective participation in a
+                        large-scale,</span>
+                  <span class="cmr-10x-x-109">open-source cybersecurity tool.</span>
+      </div>
+      <h3 class="sectionHead"><span class="titlemark">1 </span> <a id="x1-20001"></a>Introduction</h3>
+      <!--l. 51-->
+      <p class="noindent">This project focuses on contributing to the open-source community through the
+            Metasploit Framework, a widely used platform for penetration testing and exploit
+            development. The goal is to collaborate by improving module documentation, following
+            community guidelines, and gaining hands-on experience with cybersecurity tools and
+            open-source workflows.
+            <!--l. 53-->
+      <p class="noindent">
+      <h3 class="sectionHead"><span class="titlemark">2 </span> <a id="x1-30002"></a>Project Description</h3>
+      <!--l. 55-->
+      <p class="noindent">As I said bebore, The Metasploit Framework is one of the most well-known open source
+            penetration testing platforms. Maintained by Rapid7 and a global community of
+            contributors, it aims to provide security professionals, researchers, and enthusiasts with a
+            modular and extensible environment for developing, testing, and executing exploit code
+            against remote targets.
+            <!--l. 57-->
+      <p class="noindent">
+      <h4 class="subsectionHead"><span class="titlemark">2.1 </span> <a id="x1-40002.1"></a>Objectives</h4>
+      <!--l. 58-->
+      <p class="noindent">The main objectives of the Metasploit Framework are:
       <ul class="itemize1">
-      <li class="itemize">
-      <!--l. 60--><p class="noindent" >To offer a comprehensive suite of tools for penetration testing, vulnerability
-      validation, and security auditing.
-                                                                                 
-                                                                                 
-      </li>
-      <li class="itemize">
-      <!--l. 61--><p class="noindent" >To enable the creation and sharing of modular exploit code, payloads, auxiliary
-      modules, and post-exploitation tools.
-      </li>
-      <li class="itemize">
-      <!--l. 62--><p class="noindent" >To serve as an educational and training resource for learning about system
-      vulnerabilities and exploitation techniques.</li></ul>
-<!--l. 65--><p class="noindent" >
-   <h4 class="subsectionHead"><span class="titlemark">2.2   </span> <a 
- id="x1-50002.2"></a>Scope</h4>
-<!--l. 66--><p class="noindent" >The scope of the project includes:
+            <li class="itemize">
+                  <!--l. 60-->
+                  <p class="noindent">To offer a comprehensive suite of tools for penetration testing, vulnerability
+                        validation, and security auditing.
+
+
+            </li>
+            <li class="itemize">
+                  <!--l. 61-->
+                  <p class="noindent">To enable the creation and sharing of modular exploit code, payloads, auxiliary
+                        modules, and post-exploitation tools.
+            </li>
+            <li class="itemize">
+                  <!--l. 62-->
+                  <p class="noindent">To serve as an educational and training resource for learning about system
+                        vulnerabilities and exploitation techniques.
+            </li>
+      </ul>
+      <!--l. 65-->
+      <p class="noindent">
+      <h4 class="subsectionHead"><span class="titlemark">2.2 </span> <a id="x1-50002.2"></a>Scope</h4>
+      <!--l. 66-->
+      <p class="noindent">The scope of the project includes:
       <ul class="itemize1">
-      <li class="itemize">
-      <!--l. 68--><p class="noindent" >A large collection of pre-built modules for exploiting known vulnerabilities
-      across multiple platforms (Windows, Linux, macOS, etc.).
-      </li>
-      <li class="itemize">
-      <!--l. 69--><p class="noindent" >A  robust  API  that  allows  for  the  development  of  custom  modules  and
-      automation.
-      </li>
-      <li class="itemize">
-      <!--l. 70--><p class="noindent" >Integration with other tools and frameworks (e.g., Nmap, Nessus, Nexpose).
-      </li>
-      <li class="itemize">
-      <!--l. 71--><p class="noindent" >A  built-in  console  interface  (<span 
-class="cmtt-12">msfconsole</span>)  and  various  payload  delivery
-      methods.</li></ul>
-<!--l. 74--><p class="noindent" >
-   <h4 class="subsectionHead"><span class="titlemark">2.3   </span> <a 
- id="x1-60002.3"></a>Challenges</h4>
-<!--l. 75--><p class="noindent" >Some of the key challenges of contributing to Metasploit include:
+            <li class="itemize">
+                  <!--l. 68-->
+                  <p class="noindent">A large collection of pre-built modules for exploiting known vulnerabilities
+                        across multiple platforms (Windows, Linux, macOS, etc.).
+            </li>
+            <li class="itemize">
+                  <!--l. 69-->
+                  <p class="noindent">A robust API that allows for the development of custom modules and
+                        automation.
+            </li>
+            <li class="itemize">
+                  <!--l. 70-->
+                  <p class="noindent">Integration with other tools and frameworks (e.g., Nmap, Nessus, Nexpose).
+            </li>
+            <li class="itemize">
+                  <!--l. 71-->
+                  <p class="noindent">A built-in console interface (<span class="cmtt-12">msfconsole</span>) and various
+                        payload delivery
+                        methods.
+            </li>
+      </ul>
+      <!--l. 74-->
+      <p class="noindent">
+      <h4 class="subsectionHead"><span class="titlemark">2.3 </span> <a id="x1-60002.3"></a>Challenges</h4>
+      <!--l. 75-->
+      <p class="noindent">Some of the key challenges of contributing to Metasploit include:
       <ul class="itemize1">
-      <li class="itemize">
-      <!--l. 77--><p class="noindent" >Ensuring  code  quality,  compatibility,  and  security  across  a  wide  range  of
-      supported modules and environments.
-                                                                                 
-                                                                                 
-      </li>
-      <li class="itemize">
-      <!--l. 78--><p class="noindent" >Keeping up with newly discovered vulnerabilities and rapidly evolving attack
-      techniques.
-      </li>
-      <li class="itemize">
-      <!--l. 79--><p class="noindent" >Following  strict  contribution  guidelines  and  maintaining  clear,  validated
-      documentation.
-      </li>
-      <li class="itemize">
-      <!--l. 80--><p class="noindent" >Understanding complex low-level networking, exploitation concepts, and Ruby
-      programming.</li></ul>
-<!--l. 83--><p class="noindent" >
-   <h3 class="sectionHead"><span class="titlemark">3   </span> <a 
- id="x1-70003"></a>The Metasploit Journey</h3>
-<!--l. 85--><p class="noindent" >To begin my contribution to the Metasploit Framework, I first visited the official
-Metasploit Framework Contribution page <span class="cite">[<span 
-class="cmbx-12">?</span>]</span>, which outlines the different ways
-to get involved and the guidelines for contributing effectively. After reviewing
-the general instructions, I explored the project&#8217;s GitHub repository to look for
-beginner-friendly issues. GitHub allows filtering issues by various categories, including
-difficulty and required experience, which helped me identify tasks suitable for
-newcomers like myself. From all the options, I chose providing docs as the first step
-I was going to do. I found an issue (Auxiliary Scanner Docs 12389 <span class="cite">[<span 
-class="cmbx-12">?</span>]</span>), that
-had a lot of unreleased documentation documents for some auxiliary scanner
-modules.
-<!--l. 87--><p class="noindent" >
-   <h4 class="subsectionHead"><span class="titlemark">3.1   </span> <a 
- id="x1-80003.1"></a>Providing Documentation</h4>
-<!--l. 88--><p class="noindent" >Using the knowledge I had acquired over four years of studying Telecommunication
-Engineering, I decided to contribute by documenting modules that were still lacking
-official documentation whenever possible. This allowed me to apply both my
-technical background and my desire to make the framework more accessible to new
-users.
+            <li class="itemize">
+                  <!--l. 77-->
+                  <p class="noindent">Ensuring code quality, compatibility, and security across a wide range of
+                        supported modules and environments.
+
+
+            </li>
+            <li class="itemize">
+                  <!--l. 78-->
+                  <p class="noindent">Keeping up with newly discovered vulnerabilities and rapidly evolving attack
+                        techniques.
+            </li>
+            <li class="itemize">
+                  <!--l. 79-->
+                  <p class="noindent">Following strict contribution guidelines and maintaining clear, validated
+                        documentation.
+            </li>
+            <li class="itemize">
+                  <!--l. 80-->
+                  <p class="noindent">Understanding complex low-level networking, exploitation concepts, and Ruby
+                        programming.
+            </li>
+      </ul>
+      <!--l. 83-->
+      <p class="noindent">
+      <h3 class="sectionHead"><span class="titlemark">3 </span> <a id="x1-70003"></a>The Metasploit Journey</h3>
+      <!--l. 85-->
+      <p class="noindent">To begin my contribution to the Metasploit Framework, I first visited the official
+            Metasploit Framework Contribution page <span class="cite">[<span class="cmbx-12">?</span>]</span>, which
+            outlines the different ways
+            to get involved and the guidelines for contributing effectively. After reviewing
+            the general instructions, I explored the project&#8217;s GitHub repository to look for
+            beginner-friendly issues. GitHub allows filtering issues by various categories, including
+            difficulty and required experience, which helped me identify tasks suitable for
+            newcomers like myself. From all the options, I chose providing docs as the first step
+            I was going to do. I found an issue (Auxiliary Scanner Docs 12389 <span class="cite">[<span
+                        class="cmbx-12">?</span>]</span>), that
+            had a lot of unreleased documentation documents for some auxiliary scanner
+            modules.
+            <!--l. 87-->
+      <p class="noindent">
+      <h4 class="subsectionHead"><span class="titlemark">3.1 </span> <a id="x1-80003.1"></a>Providing Documentation</h4>
+      <!--l. 88-->
+      <p class="noindent">Using the knowledge I had acquired over four years of studying Telecommunication
+            Engineering, I decided to contribute by documenting modules that were still lacking
+            official documentation whenever possible. This allowed me to apply both my
+            technical background and my desire to make the framework more accessible to new
+            users.
       <ul class="itemize1">
-      <li class="itemize">
-      <!--l. 91--><p class="noindent" ><span 
-class="cmbx-12">ipv6</span><span 
-class="cmbx-12">_multicast</span><span 
-class="cmbx-12">_ping: </span>As my first contribution, I documented this module,
-      which lacked official documentation. I followed the recommended
-      <a 
-href="https://github.com/rapid7/metasploit-framework/blob/master/documentation/modules/module_doc_template.md" >documentation format</a>, including sections like Description, Verification Steps,
-                                                                                 
-                                                                                 
-      and Scenarios, and submitted it as a pull request to the official Metasploit
-      repository. This contribution helped improve accessibility and understanding
-      of the module, especially for new users exploring IPv6 reconnaissance
-      techniques. <hr class="figure"><div class="figure" 
-><a 
- id="x1-80011"></a> <img src="images/1st.png" alt="PIC" class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;1: </span><span  
-class="content">First interaction in the Github repository</span></div><!--tex4ht:label?: x1-80011 -->
-      <!--l. 96--><p class="noindent" ></div><hr class="endfigure">
-      <!--l. 98--><p class="noindent" >I got this answer for one of the members of the repository, which I really
-      appreciate it cause I learned that I needed to create branchs before doing pull
-      request.
-      </li>
-      <li class="itemize">
-      <!--l. 100--><p class="noindent" ><span 
-class="cmbx-12">copy</span><span 
-class="cmbx-12">_of</span><span 
-class="cmbx-12">_file: </span>My second contribution was the documentation of the module
-      copy_of_file. This module checks whether alternative or backup copies of a
-      specific file exist on a target web server by searching for common filename
-      variations. I provided a clear Description, detailed Verification Steps, and a
-      real Scenario showing different discovered file copies. This contribution helps
-      users understand how to use the module for web reconnaissance and identify
-      potential misconfigurations or exposed files. <hr class="figure"><div class="figure" 
-><a 
- id="x1-80022"></a> <img 
-src="images/2ndDOC.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;2: </span><span  
-class="content">Pull request for <span 
-class="cmtt-12">copy</span><span 
-class="cmtt-12">_of</span><span 
-class="cmtt-12">_file</span></span></div><!--tex4ht:label?: x1-80022 -->
-      <!--l. 105--><p class="noindent" ></div><hr class="endfigure">
-      </li>
-      <li class="itemize">
-      <!--l. 107--><p class="noindent" ><span 
-class="cmbx-12">udp</span><span 
-class="cmbx-12">_probe: </span>My third contribution involved documenting the module <span 
-class="cmtt-12">udp</span><span 
-class="cmtt-12">_probe</span>.
-      This module sends protocol-specific UDP probes to commonly used ports in order
-      to identify open services such as SNMP or TFTP. During my tests, it successfully
-      identified an SNMP service running on port 161, providing detailed system
-      information. This documentation makes it easier for users to incorporate UDP
-      scanning into their reconnaissance phase. Today I first used Metasploitable3 for
-      documentation, and this is how my workspace looked like. See Section&#x00A0;<a 
-href="#x1-100003.3">3.3<!--tex4ht:ref: subsec:Learning --></a> for more
-      details.
-      <!--l. 110--><p class="noindent" ><hr class="figure"><div class="figure" 
-><a 
- id="x1-80033"></a> <img 
-src="images/workspaceDOCUMENTATION.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;3: </span><span  
-class="content">Workspace while adding Documentation</span></div><!--tex4ht:label?: x1-80033 -->
-      <!--l. 114--><p class="noindent" ></div><hr class="endfigure">
-      </li>
-      <li class="itemize">
-      <!--l. 116--><p class="noindent" ><span 
-class="cmbx-12">pretalx</span><span 
-class="cmbx-12">_file</span><span 
-class="cmbx-12">_read (CVE-2023-28459): </span>My fourth contribution involved
-      documenting the module <span 
-class="cmtt-12">pretalx</span><span 
-class="cmtt-12">_file</span><span 
-class="cmtt-12">_read</span>, which exploits a vulnerability in the
-      Pretalx conference scheduling software that allows arbitrary file reading. The
-      module requires valid credentials and specific user permissions within the
-      application. It as a new pull request I saw that was asking for documentation for a
-      new module. The user that created the module is one that I have interacted with a
-      lot (<span 
-class="cmti-12">@msutovsky-r7</span>).
-                                                                                 
-                                                                                 
-      <!--l. 118--><p class="noindent" ><hr class="figure"><div class="figure" 
-><a 
- id="x1-80044"></a> <img 
-src="images/4thDOC.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;4: </span><span  
-class="content">Pull request closing another pull request</span></div><!--tex4ht:label?: x1-80044 -->
-      <!--l. 122--><p class="noindent" ></div><hr class="endfigure">
-      </li></ul>
-<!--l. 126--><p class="noindent" >
-   <h4 class="subsectionHead"><span class="titlemark">3.2   </span> <a 
- id="x1-90003.2"></a>Code Review and Community Involvement</h4>
-<!--l. 127--><p class="noindent" >In the Metasploit Github there are approximately two new pull requests everyday and an
-average of 40 accumulated.
-<!--l. 129--><p class="indent" >   Although I don&#8217;t have write access and I can&#8217;t merge the pull request to the original
-one, I have tried to approved some of them or comment others ones.
-<!--l. 131--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-90015"></a>
-                                                                                 
-                                                                                 
-<!--l. 133--><p class="noindent" ><img 
-src="images/approvePullReq.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;5: </span><span  
-class="content">Approving Pull Request - Malicious WSH VBScript Module</span></div><!--tex4ht:label?: x1-90015 -->
-                                                                                 
-                                                                                 
-<!--l. 135--><p class="indent" >   </div><hr class="endfigure">
-<!--l. 137--><p class="indent" >   One day, I was assisting a contributor by preparing documentation for a module that
-had been developed by him. As part of my contribution, I created a new .md file
-containing the relevant documentation and submitted it through a pull request to the
-main branch of the project. Later, the contributor asked me to attach my pull request to
-his existing pull request, so that both changes could be merged together. However, when I
-attempted to do this, I was unable to find his base repository in the available options.
-This prevented me from directly linking my pull request to his, and I had to explore
-alternative approaches to ensure our work could be integrated smoothly into the
-project.
-<!--l. 139--><p class="indent" >   Today, while browsing through open issues and pull requests to find ways to
-contribute, I came across an issue that caught my attention and seemed solvable.
-The problem was related to a password cracking module within Metasploit that
-failed under specific conditions. Specifically, the failure occurred when a user had
-only one of the required binary tools installed&#8212;either john or hashcat&#8212;but
-not both. The existing code expected both binaries to be present or forced the
-user to install the missing one, which was inconvenient and led to errors during
-execution.
-<!--l. 141--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-90026"></a>
-                                                                                 
-                                                                                 
-<!--l. 143--><p class="noindent" ><img 
-src="images/issue20396.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;6: </span><span  
-class="content">Metasploit Issue #20396</span></div><!--tex4ht:label?: x1-90026 -->
-                                                                                 
-                                                                                 
-<!--l. 145--><p class="indent" >   </div><hr class="endfigure">
-<!--l. 147--><p class="indent" >   The issue was that the system checked strictly for the presence of both binaries and
-threw an error when only one was available, displaying the message:
-<!--l. 150--><p class="indent" >   <span 
-class="cmtt-12">"No suitable john/hashcat binary was found on the system"</span>
-<!--l. 153--><p class="indent" >   To address this, I implemented a feature that allows the module to automatically
-select the available binary instead of requiring both. This &#8220;auto&#8221; mode prioritizes using
-hashcat if present, and if not, it falls back to john. Only if neither binary is found does it
-return an error. This approach improves the module&#8217;s flexibility and usability,
-allowing it to work seamlessly in environments where only one of the binaries is
-installed.
-<!--l. 155--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-90037"></a>
-                                                                                 
-                                                                                 
-<!--l. 157--><p class="noindent" ><img 
-src="images/issue-close.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;7: </span><span  
-class="content">Main changes to close the issue #20396</span></div><!--tex4ht:label?: x1-90037 -->
-                                                                                 
-                                                                                 
-<!--l. 159--><p class="indent" >   </div><hr class="endfigure">
-<!--l. 161--><p class="indent" >   With this enhancement, users no longer need to manually install both binaries to run
-the password cracking functionality, which streamlines the user experience and reduces
-setup complexity.
-<!--l. 163--><p class="indent" >   Also, While reviewing another pull request, I suggested adding a clarification to
-ensure testers download a plugin version that is confirmed to be vulnerable at the
-&#8220;Vulnerable Application&#8221; section of the documentation. Specifically, I proposed the
-note:
-<!--l. 166--><p class="indent" >   <span 
-class="cmtt-12">"Ensure you are downloading a version that is confirmed vulnerable (&#x003C;=</span>
-<span 
-class="cmtt-12">1.1.4)."</span>
-<!--l. 169--><p class="indent" >   This addition helps prevent confusion when newer, patched versions are used, and
-ensures that testing scenarios reproduce the intended vulnerability. I also acknowledged
-that the existing instructions were already clear and well-written, and expressed
-appreciation for the contributor&#8217;s original work.
-<!--l. 172--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-90048"></a>
-                                                                                 
-                                                                                 
-<!--l. 174--><p class="noindent" ><img 
-src="images/wordpress.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;8: </span><span  
-class="content"><span 
-class="cmtt-12">wordpress</span><span 
-class="cmtt-12">_cp</span><span 
-class="cmtt-12">_calendar</span><span 
-class="cmtt-12">_sqli </span>code review</span></div><!--tex4ht:label?: x1-90048 -->
-                                                                                 
-                                                                                 
-<!--l. 176--><p class="indent" >   </div><hr class="endfigure">
-   <h4 class="subsectionHead"><span class="titlemark">3.3   </span> <a 
- id="x1-100003.3"></a>Learning</h4>
-<!--l. 182--><p class="noindent" >One of the most basic aspects of this project is learning how to use Metasploit effectively.
-To achieve this, I spent several weeks solely researching and watching <span class="cite">[<span 
-class="cmbx-12">?</span>]</span> about the
-framework to understand its full potential. If I needed to resume it, this aspects would be
-the most important ones:
+            <li class="itemize">
+                  <!--l. 91-->
+                  <p class="noindent"><span class="cmbx-12">ipv6</span><span class="cmbx-12">_multicast</span><span
+                              class="cmbx-12">_ping: </span>As my first contribution, I documented this module,
+                        which lacked official documentation. I followed the recommended
+                        <a
+                              href="https://github.com/rapid7/metasploit-framework/blob/master/documentation/modules/module_doc_template.md">documentation
+                              format</a>, including sections like Description, Verification Steps,
+
+
+                        and Scenarios, and submitted it as a pull request to the official Metasploit
+                        repository. This contribution helped improve accessibility and understanding
+                        of the module, especially for new users exploring IPv6 reconnaissance
+                        techniques.
+                        <hr class="figure">
+                  <div class="figure"><a id="x1-80011"></a> <img src="images/1st.png" alt="PIC" class="image">
+                        <br />
+                        <div class="caption"><span class="id">Figure&#x00A0;1: </span><span class="content">First
+                                    interaction in the Github repository</span></div><!--tex4ht:label?: x1-80011 -->
+                        <!--l. 96-->
+                        <p class="noindent">
+                  </div>
+                  <hr class="endfigure">
+                  <!--l. 98-->
+                  <p class="noindent">I got this answer for one of the members of the repository, which I really
+                        appreciate it cause I learned that I needed to create branchs before doing pull
+                        request.
+            </li>
+            <li class="itemize">
+                  <!--l. 100-->
+                  <p class="noindent"><span class="cmbx-12">copy</span><span class="cmbx-12">_of</span><span
+                              class="cmbx-12">_file: </span>My second contribution was the documentation of the module
+                        copy_of_file. This module checks whether alternative or backup copies of a
+                        specific file exist on a target web server by searching for common filename
+                        variations. I provided a clear Description, detailed Verification Steps, and a
+                        real Scenario showing different discovered file copies. This contribution helps
+                        users understand how to use the module for web reconnaissance and identify
+                        potential misconfigurations or exposed files.
+                        <hr class="figure">
+                  <div class="figure"><a id="x1-80022"></a> <img src="images/2ndDOC.png" alt="PIC" class="image">
+                        <br />
+                        <div class="caption"><span class="id">Figure&#x00A0;2: </span><span class="content">Pull request
+                                    for <span class="cmtt-12">copy</span><span class="cmtt-12">_of</span><span
+                                          class="cmtt-12">_file</span></span></div><!--tex4ht:label?: x1-80022 -->
+                        <!--l. 105-->
+                        <p class="noindent">
+                  </div>
+                  <hr class="endfigure">
+            </li>
+            <li class="itemize">
+                  <!--l. 107-->
+                  <p class="noindent"><span class="cmbx-12">udp</span><span class="cmbx-12">_probe: </span>My third
+                        contribution involved documenting the module <span class="cmtt-12">udp</span><span
+                              class="cmtt-12">_probe</span>.
+                        This module sends protocol-specific UDP probes to commonly used ports in order
+                        to identify open services such as SNMP or TFTP. During my tests, it successfully
+                        identified an SNMP service running on port 161, providing detailed system
+                        information. This documentation makes it easier for users to incorporate UDP
+                        scanning into their reconnaissance phase. Today I first used Metasploitable3 for
+                        documentation, and this is how my workspace looked like. See Section&#x00A0;<a
+                              href="#x1-100003.3">3.3<!--tex4ht:ref: subsec:Learning --></a> for more
+                        details.
+                        <!--l. 110-->
+                  <p class="noindent">
+                        <hr class="figure">
+                  <div class="figure"><a id="x1-80033"></a> <img src="images/workspaceDOCUMENTATION.png" alt="PIC"
+                              class="image">
+                        <br />
+                        <div class="caption"><span class="id">Figure&#x00A0;3: </span><span class="content">Workspace
+                                    while adding Documentation</span></div><!--tex4ht:label?: x1-80033 -->
+                        <!--l. 114-->
+                        <p class="noindent">
+                  </div>
+                  <hr class="endfigure">
+            </li>
+            <li class="itemize">
+                  <!--l. 116-->
+                  <p class="noindent"><span class="cmbx-12">pretalx</span><span class="cmbx-12">_file</span><span
+                              class="cmbx-12">_read (CVE-2023-28459): </span>My fourth contribution involved
+                        documenting the module <span class="cmtt-12">pretalx</span><span
+                              class="cmtt-12">_file</span><span class="cmtt-12">_read</span>, which exploits a
+                        vulnerability in the
+                        Pretalx conference scheduling software that allows arbitrary file reading. The
+                        module requires valid credentials and specific user permissions within the
+                        application. It as a new pull request I saw that was asking for documentation for a
+                        new module. The user that created the module is one that I have interacted with a
+                        lot (<span class="cmti-12">@msutovsky-r7</span>).
+
+
+                        <!--l. 118-->
+                  <p class="noindent">
+                        <hr class="figure">
+                  <div class="figure"><a id="x1-80044"></a> <img src="images/4thDOC.png" alt="PIC" class="image">
+                        <br />
+                        <div class="caption"><span class="id">Figure&#x00A0;4: </span><span class="content">Pull request
+                                    closing another pull request</span></div><!--tex4ht:label?: x1-80044 -->
+                        <!--l. 122-->
+                        <p class="noindent">
+                  </div>
+                  <hr class="endfigure">
+            </li>
+      </ul>
+      <!--l. 126-->
+      <p class="noindent">
+      <h4 class="subsectionHead"><span class="titlemark">3.2 </span> <a id="x1-90003.2"></a>Code Review and Community
+            Involvement</h4>
+      <!--l. 127-->
+      <p class="noindent">In the Metasploit Github there are approximately two new pull requests everyday and an
+            average of 40 accumulated.
+            <!--l. 129-->
+      <p class="indent"> Although I don&#8217;t have write access and I can&#8217;t merge the pull request to the
+            original
+            one, I have tried to approved some of them or comment others ones.
+            <!--l. 131-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-90015"></a>
+
+
+            <!--l. 133-->
+            <p class="noindent"><img src="images/approvePullReq.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;5: </span><span class="content">Approving Pull Request -
+                        Malicious WSH VBScript Module</span></div><!--tex4ht:label?: x1-90015 -->
+
+
+            <!--l. 135-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <!--l. 137-->
+      <p class="indent"> One day, I was assisting a contributor by preparing documentation for a module that
+            had been developed by him. As part of my contribution, I created a new .md file
+            containing the relevant documentation and submitted it through a pull request to the
+            main branch of the project. Later, the contributor asked me to attach my pull request to
+            his existing pull request, so that both changes could be merged together. However, when I
+            attempted to do this, I was unable to find his base repository in the available options.
+            This prevented me from directly linking my pull request to his, and I had to explore
+            alternative approaches to ensure our work could be integrated smoothly into the
+            project.
+            <!--l. 139-->
+      <p class="indent"> Today, while browsing through open issues and pull requests to find ways to
+            contribute, I came across an issue that caught my attention and seemed solvable.
+            The problem was related to a password cracking module within Metasploit that
+            failed under specific conditions. Specifically, the failure occurred when a user had
+            only one of the required binary tools installed&#8212;either john or hashcat&#8212;but
+            not both. The existing code expected both binaries to be present or forced the
+            user to install the missing one, which was inconvenient and led to errors during
+            execution.
+            <!--l. 141-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-90026"></a>
+
+
+            <!--l. 143-->
+            <p class="noindent"><img src="images/issue20396.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;6: </span><span class="content">Metasploit Issue
+                        #20396</span></div><!--tex4ht:label?: x1-90026 -->
+
+
+            <!--l. 145-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <!--l. 147-->
+      <p class="indent"> The issue was that the system checked strictly for the presence of both binaries and
+            threw an error when only one was available, displaying the message:
+            <!--l. 150-->
+      <p class="indent"> <span class="cmtt-12">"No suitable john/hashcat binary was found on the system"</span>
+            <!--l. 153-->
+      <p class="indent"> To address this, I implemented a feature that allows the module to automatically
+            select the available binary instead of requiring both. This &#8220;auto&#8221; mode prioritizes using
+            hashcat if present, and if not, it falls back to john. Only if neither binary is found does it
+            return an error. This approach improves the module&#8217;s flexibility and usability,
+            allowing it to work seamlessly in environments where only one of the binaries is
+            installed.
+            <!--l. 155-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-90037"></a>
+
+
+            <!--l. 157-->
+            <p class="noindent"><img src="images/issue-close.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;7: </span><span class="content">Main changes to close
+                        the issue #20396</span></div><!--tex4ht:label?: x1-90037 -->
+
+
+            <!--l. 159-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <!--l. 161-->
+      <p class="indent"> With this enhancement, users no longer need to manually install both binaries to run
+            the password cracking functionality, which streamlines the user experience and reduces
+            setup complexity.
+            <!--l. 163-->
+      <p class="indent"> Also, While reviewing another pull request, I suggested adding a clarification to
+            ensure testers download a plugin version that is confirmed to be vulnerable at the
+            &#8220;Vulnerable Application&#8221; section of the documentation. Specifically, I proposed the
+            note:
+            <!--l. 166-->
+      <p class="indent"> <span class="cmtt-12">"Ensure you are downloading a version that is confirmed vulnerable
+                  (&#x003C;=</span>
+            <span class="cmtt-12">1.1.4)."</span>
+            <!--l. 169-->
+      <p class="indent"> This addition helps prevent confusion when newer, patched versions are used, and
+            ensures that testing scenarios reproduce the intended vulnerability. I also acknowledged
+            that the existing instructions were already clear and well-written, and expressed
+            appreciation for the contributor&#8217;s original work.
+            <!--l. 172-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-90048"></a>
+
+
+            <!--l. 174-->
+            <p class="noindent"><img src="images/wordpress.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;8: </span><span class="content"><span
+                              class="cmtt-12">wordpress</span><span class="cmtt-12">_cp</span><span
+                              class="cmtt-12">_calendar</span><span class="cmtt-12">_sqli </span>code review</span>
+            </div><!--tex4ht:label?: x1-90048 -->
+
+
+            <!--l. 176-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <h4 class="subsectionHead"><span class="titlemark">3.3 </span> <a id="x1-100003.3"></a>Learning</h4>
+      <!--l. 182-->
+      <p class="noindent">One of the most basic aspects of this project is learning how to use Metasploit effectively.
+            To achieve this, I spent several weeks solely researching and watching <span class="cite">[<span
+                        class="cmbx-12">?</span>]</span> about the
+            framework to understand its full potential. If I needed to resume it, this aspects would be
+            the most important ones:
       <ul class="itemize1">
-      <li class="itemize">
-      <!--l. 185--><p class="noindent" ><span 
-class="cmbx-12">Workspaces </span><br 
-class="newline" />Workspaces allow you to organize your data by separating different sessions or
-      projects. They store information such as hosts, services, and credentials
-      independently. Some useful commands include:
-           <ul class="itemize2">
-           <li class="itemize">
-           <!--l. 188--><p class="noindent" ><span 
-class="cmtt-12">workspace </span>&#8211; lists current workspaces.
-           </li>
-           <li class="itemize">
-           <!--l. 189--><p class="noindent" ><span 
-class="cmtt-12">workspace -a &#x003C;name&#x003E; </span>&#8211; creates a new workspace.
-           </li>
-           <li class="itemize">
-           <!--l. 190--><p class="noindent" ><span 
-class="cmtt-12">workspace &#x003C;name&#x003E; </span>&#8211; switches to a specific workspace.</li></ul>
-      </li>
-      <li class="itemize">
-      <!--l. 193--><p class="noindent" ><span 
-class="cmbx-12">Essential Metasploit Commands </span><br 
-class="newline" />These are the commands I used most often while navigating and using
-      Metasploit:
-           <ul class="itemize2">
-           <li class="itemize">
-           <!--l. 196--><p class="noindent" ><span 
-class="cmtt-12">search &#x003C;keyword&#x003E; </span>&#8211; finds relevant modules.
-           </li>
-           <li class="itemize">
-           <!--l. 197--><p class="noindent" ><span 
-class="cmtt-12">use &#x003C;module&#x003E; </span>&#8211; loads the desired module.
-           </li>
-           <li class="itemize">
-           <!--l. 198--><p class="noindent" ><span 
-class="cmtt-12">info </span>&#8211; displays details about the module.
-           </li>
-           <li class="itemize">
-           <!--l. 199--><p class="noindent" ><span 
-class="cmtt-12">show options </span>&#8211; shows required/optional parameters.
-                                                                                 
-                                                                                 
-           </li>
-           <li class="itemize">
-           <!--l. 200--><p class="noindent" ><span 
-class="cmtt-12">set &#x003C;option&#x003E; &#x003C;value&#x003E; </span>&#8211; configures module options.
-           </li>
-           <li class="itemize">
-           <!--l. 201--><p class="noindent" ><span 
-class="cmtt-12">run </span>or <span 
-class="cmtt-12">exploit </span>&#8211; executes the module.
-           </li>
-           <li class="itemize">
-           <!--l. 202--><p class="noindent" ><span 
-class="cmtt-12">sessions </span>&#8211; lists active sessions.
-           </li>
-           <li class="itemize">
-           <!--l. 203--><p class="noindent" ><span 
-class="cmtt-12">sessions -i &#x003C;id&#x003E; </span>&#8211; interacts with a session.</li></ul>
-      </li>
-      <li class="itemize">
-      <!--l. 206--><p class="noindent" ><span 
-class="cmbx-12">Module Configuration </span><br 
-class="newline" />Every module needs to be properly configured before it can be run. This includes
-      setting target hosts, ports, payloads, and network settings:
-           <ul class="itemize2">
-           <li class="itemize">
-           <!--l. 209--><p class="noindent" ><span 
-class="cmtt-12">RHOSTS </span>&#8211; the IP address of the target machine.
-           </li>
-           <li class="itemize">
-           <!--l. 210--><p class="noindent" ><span 
-class="cmtt-12">RPORT </span>&#8211; the port used by the target service.
-           </li>
-           <li class="itemize">
-           <!--l. 211--><p class="noindent" ><span 
-class="cmtt-12">PAYLOAD </span>&#8211; the code to be executed after exploitation.
-           </li>
-           <li class="itemize">
-           <!--l. 212--><p class="noindent" ><span 
-class="cmtt-12">LHOST / LPORT </span>&#8211; local machine IP and port for reverse connections.
-           </li>
-           <li class="itemize">
-           <!--l. 213--><p class="noindent" ><span 
-class="cmtt-12">show advanced </span>&#8211; displays additional configurable parameters.</li></ul>
-      </li>
-      <li class="itemize">
-      <!--l. 216--><p class="noindent" ><span 
-class="cmbx-12">Integration with Nmap </span><br 
-class="newline" />Nmap, a popular network scanner, can be directly integrated with Metasploit to
-      import scan results and quickly identify potential targets and vulnerabilities.
-      Using the command <span 
-class="cmtt-12">db</span><span 
-class="cmtt-12">_nmap</span>, the results are stored in the Metasploit
-      database and can be analyzed using <span 
-class="cmtt-12">hosts</span>, <span 
-class="cmtt-12">services</span>, and <span 
-class="cmtt-12">vulns </span>commands.
-      This improves reconnaissance efficiency and streamlines the exploitation
-      workflow.
-                                                                                 
-                                                                                 
-      </li>
-      <li class="itemize">
-      <!--l. 219--><p class="noindent" ><span 
-class="cmbx-12">Meterpreter </span><br 
-class="newline" />Meterpreter is an advanced, dynamic payload used after a successful exploit. It
-      provides an interactive shell that runs in memory, avoiding writing to disk and
-      making detection harder. It allows the attacker to perform post-exploitation tasks
-      such as privilege escalation, file system browsing, keystroke logging, and
-      webcam/audio recording. It supports extensions and works over encrypted
-      channels.
-      </li></ul>
-<!--l. 224--><p class="noindent" >
-   <h4 class="subsectionHead"><span class="titlemark">3.4   </span> <a 
- id="x1-110003.4"></a>Metasploitable3</h4>
-<!--l. 227--><p class="noindent" >As part of the hands-on learning phase, I installed and worked with <a 
-href="https://github.com/rapid7/metasploitable3" >Metasploitable3</a>, a
-deliberately vulnerable virtual machine maintained by Rapid7. It is designed to
-simulate a realistic and complex target environment for testing and developing the
-security tool of Metasploit. This setup allowed me to move beyond theoretical
-research and begin applying exploitation techniques in a safe and controlled lab
-environment. In this section, I document some of the key exploits I performed
-using the Metasploit Framework against Metasploitable3, as part of my learning
-process.
-<!--l. 229--><p class="noindent" >
-   <h5 class="subsubsectionHead"><span class="titlemark">3.4.1   </span> <a 
- id="x1-120003.4.1"></a>ProFTPD 1.3.5 (port 21) - Remote Code Execution via mod_copy</h5>
-<!--l. 231--><p class="noindent" >Through an Nmap scan, I identified which ports were open. I notice that the port 21 was
-one of them and running ProFTPD version 1.3.5, a known vulnerable FTP server. This
-version is affected by a Remote Code Execution (RCE) vulnerability via the mod_copy
-module, which allows unauthenticated attackers to copy files from one location on the
-server to another, enabling arbitrary command execution.
-<!--l. 233--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-120019"></a>
-                                                                                 
-                                                                                 
-<!--l. 235--><p class="noindent" ><img 
-src="images/nmapSCAN.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;9: </span><span  
-class="content">Nmap port scan</span></div><!--tex4ht:label?: x1-120019 -->
-                                                                                 
-                                                                                 
-<!--l. 237--><p class="indent" >   </div><hr class="endfigure">
-<!--l. 239--><p class="indent" >   I exploited this vulnerability using <span 
-class="cmtt-12">proftpd</span><span 
-class="cmtt-12">_modcopy</span><span 
-class="cmtt-12">_exec </span>module within Metasploit,
-which I found using the search tool inside <span 
-class="cmtt-12">msfconsole</span>.
-<!--l. 241--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-1200210"></a>
-                                                                                 
-                                                                                 
-<!--l. 243--><p class="noindent" ><img 
-src="images/ProFTPDSEARCH.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;10: </span><span  
-class="content">ProFTPD 1.3.5 vulnerability search</span></div><!--tex4ht:label?: x1-1200210 -->
-                                                                                 
-                                                                                 
-<!--l. 245--><p class="indent" >   </div><hr class="endfigure">
-<!--l. 247--><p class="indent" >   The exploit enabled me to gain remote access to the server by writing a malicious
-payload into a web-accessible directory.
-<!--l. 249--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-1200311"></a>
-                                                                                 
-                                                                                 
-<!--l. 251--><p class="noindent" ><img 
-src="images/ProFTPDOPTIONS.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;11: </span><span  
-class="content">Running the exploit <span 
-class="cmtt-12">proftpd</span><span 
-class="cmtt-12">_modcopy</span><span 
-class="cmtt-12">_exec</span></span></div><!--tex4ht:label?: x1-1200311 -->
-                                                                                 
-                                                                                 
-<!--l. 253--><p class="indent" >   </div><hr class="endfigure">
-<!--l. 255--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-1200412"></a>
-                                                                                 
-                                                                                 
-<!--l. 257--><p class="noindent" ><img 
-src="images/ProFTPFInal.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;12: </span><span  
-class="content">Server access completed</span></div><!--tex4ht:label?: x1-1200412 -->
-                                                                                 
-                                                                                 
-<!--l. 259--><p class="indent" >   </div><hr class="endfigure">
-   <h5 class="subsubsectionHead"><span class="titlemark">3.4.2   </span> <a 
- id="x1-130003.4.2"></a>Payroll Application - SQL Injection (UNION-based)</h5>
-<!--l. 264--><p class="noindent" >Later in the engagement, I analyzed a web application available at <span 
-class="cmtt-12">/payroll</span><span 
-class="cmtt-12">_app.php</span>.
-During testing, I discovered that the login functionality of this application was vulnerable
-to a UNION-based SQL injection in the password parameter.
-<!--l. 266--><p class="indent" >   This vulnerability was first confirmed manually using Burp Suite Repeater, by
-modifying the POST request and observing unexpected behavior in the response.
-Specifically, inserting the character * as a marker in the password field revealed a
-potentially injectable entry point.
-<!--l. 268--><p class="indent" >   To automate exploitation and extract data, I used sqlmap, a powerful tool for
-detecting and exploiting SQL injection vulnerabilities. The request was saved as req.txt
-and the following command was executed:
-                                                                                 
-                                                                                 
-   <pre class="verbatim" id="verbatim-1">
+            <li class="itemize">
+                  <!--l. 185-->
+                  <p class="noindent"><span class="cmbx-12">Workspaces </span><br class="newline" />Workspaces allow you
+                        to organize your data by separating different sessions or
+                        projects. They store information such as hosts, services, and credentials
+                        independently. Some useful commands include:
+                  <ul class="itemize2">
+                        <li class="itemize">
+                              <!--l. 188-->
+                              <p class="noindent"><span class="cmtt-12">workspace </span>&#8211; lists current
+                                    workspaces.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 189-->
+                              <p class="noindent"><span class="cmtt-12">workspace -a &#x003C;name&#x003E; </span>&#8211;
+                                    creates a new workspace.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 190-->
+                              <p class="noindent"><span class="cmtt-12">workspace &#x003C;name&#x003E; </span>&#8211;
+                                    switches to a specific workspace.
+                        </li>
+                  </ul>
+            </li>
+            <li class="itemize">
+                  <!--l. 193-->
+                  <p class="noindent"><span class="cmbx-12">Essential Metasploit Commands </span><br
+                              class="newline" />These are the commands I used most often while navigating and using
+                        Metasploit:
+                  <ul class="itemize2">
+                        <li class="itemize">
+                              <!--l. 196-->
+                              <p class="noindent"><span class="cmtt-12">search &#x003C;keyword&#x003E; </span>&#8211;
+                                    finds relevant modules.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 197-->
+                              <p class="noindent"><span class="cmtt-12">use &#x003C;module&#x003E; </span>&#8211; loads
+                                    the desired module.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 198-->
+                              <p class="noindent"><span class="cmtt-12">info </span>&#8211; displays details about the
+                                    module.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 199-->
+                              <p class="noindent"><span class="cmtt-12">show options </span>&#8211; shows
+                                    required/optional parameters.
+
+
+                        </li>
+                        <li class="itemize">
+                              <!--l. 200-->
+                              <p class="noindent"><span class="cmtt-12">set &#x003C;option&#x003E; &#x003C;value&#x003E;
+                                    </span>&#8211; configures module options.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 201-->
+                              <p class="noindent"><span class="cmtt-12">run </span>or <span class="cmtt-12">exploit
+                                    </span>&#8211; executes the module.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 202-->
+                              <p class="noindent"><span class="cmtt-12">sessions </span>&#8211; lists active sessions.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 203-->
+                              <p class="noindent"><span class="cmtt-12">sessions -i &#x003C;id&#x003E; </span>&#8211;
+                                    interacts with a session.
+                        </li>
+                  </ul>
+            </li>
+            <li class="itemize">
+                  <!--l. 206-->
+                  <p class="noindent"><span class="cmbx-12">Module Configuration </span><br class="newline" />Every
+                        module needs to be properly configured before it can be run. This includes
+                        setting target hosts, ports, payloads, and network settings:
+                  <ul class="itemize2">
+                        <li class="itemize">
+                              <!--l. 209-->
+                              <p class="noindent"><span class="cmtt-12">RHOSTS </span>&#8211; the IP address of the
+                                    target machine.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 210-->
+                              <p class="noindent"><span class="cmtt-12">RPORT </span>&#8211; the port used by the target
+                                    service.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 211-->
+                              <p class="noindent"><span class="cmtt-12">PAYLOAD </span>&#8211; the code to be executed
+                                    after exploitation.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 212-->
+                              <p class="noindent"><span class="cmtt-12">LHOST / LPORT </span>&#8211; local machine IP
+                                    and port for reverse connections.
+                        </li>
+                        <li class="itemize">
+                              <!--l. 213-->
+                              <p class="noindent"><span class="cmtt-12">show advanced </span>&#8211; displays additional
+                                    configurable parameters.
+                        </li>
+                  </ul>
+            </li>
+            <li class="itemize">
+                  <!--l. 216-->
+                  <p class="noindent"><span class="cmbx-12">Integration with Nmap </span><br class="newline" />Nmap, a
+                        popular network scanner, can be directly integrated with Metasploit to
+                        import scan results and quickly identify potential targets and vulnerabilities.
+                        Using the command <span class="cmtt-12">db</span><span class="cmtt-12">_nmap</span>, the results
+                        are stored in the Metasploit
+                        database and can be analyzed using <span class="cmtt-12">hosts</span>, <span
+                              class="cmtt-12">services</span>, and <span class="cmtt-12">vulns </span>commands.
+                        This improves reconnaissance efficiency and streamlines the exploitation
+                        workflow.
+
+
+            </li>
+            <li class="itemize">
+                  <!--l. 219-->
+                  <p class="noindent"><span class="cmbx-12">Meterpreter </span><br class="newline" />Meterpreter is an
+                        advanced, dynamic payload used after a successful exploit. It
+                        provides an interactive shell that runs in memory, avoiding writing to disk and
+                        making detection harder. It allows the attacker to perform post-exploitation tasks
+                        such as privilege escalation, file system browsing, keystroke logging, and
+                        webcam/audio recording. It supports extensions and works over encrypted
+                        channels.
+            </li>
+      </ul>
+      <!--l. 224-->
+      <p class="noindent">
+      <h4 class="subsectionHead"><span class="titlemark">3.4 </span> <a id="x1-110003.4"></a>Metasploitable3</h4>
+      <!--l. 227-->
+      <p class="noindent">As part of the hands-on learning phase, I installed and worked with <a
+                  href="https://github.com/rapid7/metasploitable3">Metasploitable3</a>, a
+            deliberately vulnerable virtual machine maintained by Rapid7. It is designed to
+            simulate a realistic and complex target environment for testing and developing the
+            security tool of Metasploit. This setup allowed me to move beyond theoretical
+            research and begin applying exploitation techniques in a safe and controlled lab
+            environment. In this section, I document some of the key exploits I performed
+            using the Metasploit Framework against Metasploitable3, as part of my learning
+            process.
+            <!--l. 229-->
+      <p class="noindent">
+      <h5 class="subsubsectionHead"><span class="titlemark">3.4.1 </span> <a id="x1-120003.4.1"></a>ProFTPD 1.3.5 (port
+            21) - Remote Code Execution via mod_copy</h5>
+      <!--l. 231-->
+      <p class="noindent">Through an Nmap scan, I identified which ports were open. I notice that the port 21 was
+            one of them and running ProFTPD version 1.3.5, a known vulnerable FTP server. This
+            version is affected by a Remote Code Execution (RCE) vulnerability via the mod_copy
+            module, which allows unauthenticated attackers to copy files from one location on the
+            server to another, enabling arbitrary command execution.
+            <!--l. 233-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-120019"></a>
+
+
+            <!--l. 235-->
+            <p class="noindent"><img src="images/nmapSCAN.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;9: </span><span class="content">Nmap port scan</span>
+            </div><!--tex4ht:label?: x1-120019 -->
+
+
+            <!--l. 237-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <!--l. 239-->
+      <p class="indent"> I exploited this vulnerability using <span class="cmtt-12">proftpd</span><span
+                  class="cmtt-12">_modcopy</span><span class="cmtt-12">_exec </span>module within Metasploit,
+            which I found using the search tool inside <span class="cmtt-12">msfconsole</span>.
+            <!--l. 241-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-1200210"></a>
+
+
+            <!--l. 243-->
+            <p class="noindent"><img src="images/ProFTPDSEARCH.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;10: </span><span class="content">ProFTPD 1.3.5
+                        vulnerability search</span></div><!--tex4ht:label?: x1-1200210 -->
+
+
+            <!--l. 245-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <!--l. 247-->
+      <p class="indent"> The exploit enabled me to gain remote access to the server by writing a malicious
+            payload into a web-accessible directory.
+            <!--l. 249-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-1200311"></a>
+
+
+            <!--l. 251-->
+            <p class="noindent"><img src="images/ProFTPDOPTIONS.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;11: </span><span class="content">Running the exploit
+                        <span class="cmtt-12">proftpd</span><span class="cmtt-12">_modcopy</span><span
+                              class="cmtt-12">_exec</span></span></div><!--tex4ht:label?: x1-1200311 -->
+
+
+            <!--l. 253-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <!--l. 255-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-1200412"></a>
+
+
+            <!--l. 257-->
+            <p class="noindent"><img src="images/ProFTPFInal.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;12: </span><span class="content">Server access
+                        completed</span></div><!--tex4ht:label?: x1-1200412 -->
+
+
+            <!--l. 259-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <h5 class="subsubsectionHead"><span class="titlemark">3.4.2 </span> <a id="x1-130003.4.2"></a>Payroll Application
+            - SQL Injection (UNION-based)</h5>
+      <!--l. 264-->
+      <p class="noindent">Later in the engagement, I analyzed a web application available at <span
+                  class="cmtt-12">/payroll</span><span class="cmtt-12">_app.php</span>.
+            During testing, I discovered that the login functionality of this application was vulnerable
+            to a UNION-based SQL injection in the password parameter.
+            <!--l. 266-->
+      <p class="indent"> This vulnerability was first confirmed manually using Burp Suite Repeater, by
+            modifying the POST request and observing unexpected behavior in the response.
+            Specifically, inserting the character * as a marker in the password field revealed a
+            potentially injectable entry point.
+            <!--l. 268-->
+      <p class="indent"> To automate exploitation and extract data, I used sqlmap, a powerful tool for
+            detecting and exploiting SQL injection vulnerabilities. The request was saved as req.txt
+            and the following command was executed:
+
+
+      <pre class="verbatim" id="verbatim-1">
 sqlmap&#x00A0;-r&#x00A0;req.txt&#x00A0;--dbms="SQL"&#x00A0;--level=1&#x00A0;--risk=1&#x00A0;--dump&#x00A0;--output-dir=output&#x00A0;--batch
 </pre>
-<!--l. 272--><p class="nopar" >
+      <!--l. 272-->
+      <p class="nopar">
       <ul class="itemize1">
-      <li class="itemize">
-      <!--l. 276--><p class="noindent" ><span 
-class="cmtt-12">--dbms</span>: Indicates the type of Database Management System expected on the
-      server. In this case, the scan was tailored for <span 
-class="cmtt-12">MySQL</span>, optimizing payloads and
-      queries accordingly.
-      </li>
-      <li class="itemize">
-      <!--l. 278--><p class="noindent" ><span 
-class="cmtt-12">--level=1</span>: Sets the depth of the tests to be performed. A level of 1 means
-      that only the most basic and least intrusive checks are executed.
-      </li>
-      <li class="itemize">
-      <!--l. 280--><p class="noindent" ><span 
-class="cmtt-12">--risk=1</span>: Specifies the potential impact of the payloads used. Risk level 1
-      ensures  a  cautious  approach,  reducing  the  chance  of  affecting  the  server&#8217;s
-      stability.
-      </li>
-      <li class="itemize">
-      <!--l. 282--><p class="noindent" ><span 
-class="cmtt-12">--dump</span>:  Instructs  SQLMap  to  retrieve  and  display  the  contents  of  the
-      discovered databases.
-      </li>
-      <li class="itemize">
-      <!--l. 284--><p class="noindent" ><span 
-class="cmtt-12">--output-dir=output</span>: Defines the destination directory for storing the results
-      of the SQL injection tests and any extracted data.
-      </li>
-      <li class="itemize">
-      <!--l. 286--><p class="noindent" ><span 
-class="cmtt-12">--batch</span>: Enables non-interactive execution. All prompts are automatically
-      answered using default options, which is ideal for scripting or automation.</li></ul>
-<!--l. 289--><p class="indent" >   The output result was users.csv and was contain the following:
-                                                                                 
-                                                                                 
-   <pre class="verbatim" id="verbatim-2">
+            <li class="itemize">
+                  <!--l. 276-->
+                  <p class="noindent"><span class="cmtt-12">--dbms</span>: Indicates the type of Database Management
+                        System expected on the
+                        server. In this case, the scan was tailored for <span class="cmtt-12">MySQL</span>, optimizing
+                        payloads and
+                        queries accordingly.
+            </li>
+            <li class="itemize">
+                  <!--l. 278-->
+                  <p class="noindent"><span class="cmtt-12">--level=1</span>: Sets the depth of the tests to be
+                        performed. A level of 1 means
+                        that only the most basic and least intrusive checks are executed.
+            </li>
+            <li class="itemize">
+                  <!--l. 280-->
+                  <p class="noindent"><span class="cmtt-12">--risk=1</span>: Specifies the potential impact of the
+                        payloads used. Risk level 1
+                        ensures a cautious approach, reducing the chance of affecting the server&#8217;s
+                        stability.
+            </li>
+            <li class="itemize">
+                  <!--l. 282-->
+                  <p class="noindent"><span class="cmtt-12">--dump</span>: Instructs SQLMap to retrieve and display the
+                        contents of the
+                        discovered databases.
+            </li>
+            <li class="itemize">
+                  <!--l. 284-->
+                  <p class="noindent"><span class="cmtt-12">--output-dir=output</span>: Defines the destination
+                        directory for storing the results
+                        of the SQL injection tests and any extracted data.
+            </li>
+            <li class="itemize">
+                  <!--l. 286-->
+                  <p class="noindent"><span class="cmtt-12">--batch</span>: Enables non-interactive execution. All
+                        prompts are automatically
+                        answered using default options, which is ideal for scripting or automation.
+            </li>
+      </ul>
+      <!--l. 289-->
+      <p class="indent"> The output result was users.csv and was contain the following:
+
+
+      <pre class="verbatim" id="verbatim-2">
 ...
 
 Database:&#x00A0;payroll
@@ -706,169 +793,191 @@ Table:&#x00A0;users
 
 ...
 </pre>
-<!--l. 318--><p class="nopar" >
-<!--l. 321--><p class="indent" >   I tried the first user to ensure that they were real and as we can see they
-are.
-<!--l. 323--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-1300113"></a>
-                                                                                 
-                                                                                 
-<!--l. 325--><p class="noindent" ><img 
-src="images/users.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;13: </span><span  
-class="content">Testing users Payroll</span></div><!--tex4ht:label?: x1-1300113 -->
-                                                                                 
-                                                                                 
-<!--l. 327--><p class="indent" >   </div><hr class="endfigure">
-   <h5 class="subsubsectionHead"><span class="titlemark">3.4.3   </span> <a 
- id="x1-140003.4.3"></a>PhpMyAdmin (port 80) - Remote Code Execution via Exposed Credentials</h5>
-<!--l. 331--><p class="noindent" >This vulnerability is classified as an authentication flaw, where valid credentials for the
-PhpMyAdmin web interface were disclosed in the system&#8217;s internal documentation (wiki).
-Specifically, the username and password were found to be <span 
-class="cmtt-12">root:sploitme</span>, allowing an
-attacker to log in without the need for brute-force or guessing.
-<!--l. 333--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-1400114"></a>
-                                                                                 
-                                                                                 
-<!--l. 335--><p class="noindent" ><img 
-src="images/optionsSET.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;14: </span><span  
-class="content">Setting options for the attack</span></div><!--tex4ht:label?: x1-1400114 -->
-                                                                                 
-                                                                                 
-<!--l. 337--><p class="indent" >   </div><hr class="endfigure">
-<!--l. 339--><p class="indent" >   To exploit this, the Metasploit module was configured with the appropriate options:
-the target port was set to <span 
-class="cmtt-12">80</span>, and the <span 
-class="cmtt-12">TARGETURI </span>was specified as <span 
-class="cmtt-12">/phpmyadmin/</span>. Upon
-providing the leaked credentials, the exploit successfully authenticated and attempted to
-deliver a Meterpreter payload.
-<!--l. 341--><p class="indent" >   This setup demonstrates how exposed or hardcoded credentials&#8212;even when
-documented internally&#8212;can lead to full remote code execution if combined with a
-vulnerable application like PhpMyAdmin.
-<!--l. 343--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-1400215"></a>
-                                                                                 
-                                                                                 
-<!--l. 345--><p class="noindent" ><img 
-src="images/at2DONE.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;15: </span><span  
-class="content">Attack done. Meterpreter shell opened</span></div><!--tex4ht:label?: x1-1400215 -->
-                                                                                 
-                                                                                 
-<!--l. 347--><p class="indent" >   </div><hr class="endfigure">
-   <h5 class="subsubsectionHead"><span class="titlemark">3.4.4   </span> <a 
- id="x1-150003.4.4"></a>Unreal IRC Service (port 6607) - Remote Code Execution via Backdoored
-Version</h5>
-<!--l. 351--><p class="noindent" >This vulnerability stems from the inclusion of a backdoor in a maliciously modified
-version of the UnrealIRCd source package (<span 
-class="cmtt-12">Unreal3.2.8.1.tar.gz</span>). In November 2009,
-attackers replaced the original file on the official mirror with a tampered version that
-introduced a backdoor, allowing remote command execution with the privileges of the
-user running the IRC daemon.
-<!--l. 353--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-1500116"></a>
-                                                                                 
-                                                                                 
-<!--l. 355--><p class="noindent" ><img 
-src="images/optionsBACKDOOR.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;16: </span><span  
-class="content">Options for the Unreal IRC Service attack</span></div><!--tex4ht:label?: x1-1500116 -->
-                                                                                 
-                                                                                 
-<!--l. 357--><p class="indent" >   </div><hr class="endfigure">
-<!--l. 359--><p class="indent" >   To exploit this, the Metasploit module   <span 
-class="cmtt-12">unix/irc/unreal</span><span 
-class="cmtt-12">_ircd</span><span 
-class="cmtt-12">_3281</span><span 
-class="cmtt-12">_backdoor </span>was
-configured with the appropriate options: the RHOST was set to the target server, the
-payload selected was <span 
-class="cmtt-12">cmd/unix/reverse</span><span 
-class="cmtt-12">_perl</span>, the target port was defined as 6697, and
-the LHOST was set to the attacker&#8217;s IP address (10.0.3.7). Once launched, the exploit
-sent a crafted backdoor command to the service.
-<!--l. 361--><p class="indent" >   This scenario demonstrates how the use of compromised software&#8212;especially from
-unverified or tampered sources&#8212;can introduce severe vulnerabilities, enabling
-unauthenticated attackers to gain remote code execution on affected systems.
-<!--l. 363--><p class="indent" >   <hr class="figure"><div class="figure" 
->
-                                                                                 
-                                                                                 
-<a 
- id="x1-1500217"></a>
-                                                                                 
-                                                                                 
-<!--l. 365--><p class="noindent" ><img 
-src="images/backdoorATTACK.png" alt="PIC"  
-class="image" >
-<br /> <div class="caption" 
-><span class="id">Figure&#x00A0;17: </span><span  
-class="content">Command execution shell</span></div><!--tex4ht:label?: x1-1500217 -->
-                                                                                 
-                                                                                 
-<!--l. 367--><p class="indent" >   </div><hr class="endfigure">
-   <h3 class="sectionHead"><span class="titlemark">4   </span> <a 
- id="x1-160004"></a>Conclusion</h3>
-<!--l. 370--><p class="noindent" >Collaborating on the Metasploit Framework over the past year has been a highly
-rewarding experience that provided me with a deeper understanding of how an
-open-source project operates from the inside, as well as the tools and workflows needed to
-participate effectively. In particular, I became proficient with Git and GitHub&#8212;skills that
-have become essential for any professional in the cybersecurity and software development
-fields.
-<!--l. 372--><p class="indent" >   Through my contributions, I integrated into an active and diverse open-source
-community, learned to follow its guidelines, and interacted with contributors and
-maintainers from different backgrounds. This experience allowed me to master
-the technical and collaborative processes necessary to contribute meaningfully,
-from creating well-structured documentation to reviewing code and suggesting
-improvements.
-<!--l. 374--><p class="indent" >   Working with Metasploit also helped me reflect on its place in the cybersecurity
-landscape. As mentioned by s4vitarr in a video I encountered <span class="cite">[<span 
-class="cmbx-12">?</span>]</span>, the true challenge and
-beauty of cybersecurity lies in creating your own modules rather than relying solely on
-those built by others. While Metasploit makes exploitation more accessible&#8212;including to
-people who perhaps should not have such easy access&#8212;it also serves as a powerful
-educational tool for those willing to go deeper.
-<!--l. 376--><p class="indent" >   Beyond technical skills, this project sparked my curiosity about the wider open-source
-ecosystem. I have since explored other projects, discovering valuable resources such as
-The Odin Project <span class="cite">[<span 
-class="cmbx-12">?</span>]</span>, a free platform for learning web development, which has enriched
-my skill set as a professional.
-<!--l. 378--><p class="indent" >   In summary, this internship not only allowed me to meet the stated objectives&#8212;integrating
-into an open-source community, mastering contribution tools, and understanding
-the implications of open-source choices&#8212;but also encouraged me to explore,
-learn, and critically reflect on my work. The year-long collaboration has been an
-important step in my growth as a cybersecurity practitioner and open-source
-contributor.
-    
-</body></html> 
-
-                                                                                 
+      <!--l. 318-->
+      <p class="nopar">
+            <!--l. 321-->
+      <p class="indent"> I tried the first user to ensure that they were real and as we can see they
+            are.
+            <!--l. 323-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
 
 
+            <a id="x1-1300113"></a>
+
+
+            <!--l. 325-->
+            <p class="noindent"><img src="images/users.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;13: </span><span class="content">Testing users
+                        Payroll</span></div><!--tex4ht:label?: x1-1300113 -->
+
+
+            <!--l. 327-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <h5 class="subsubsectionHead"><span class="titlemark">3.4.3 </span> <a id="x1-140003.4.3"></a>PhpMyAdmin (port 80)
+            - Remote Code Execution via Exposed Credentials</h5>
+      <!--l. 331-->
+      <p class="noindent">This vulnerability is classified as an authentication flaw, where valid credentials for the
+            PhpMyAdmin web interface were disclosed in the system&#8217;s internal documentation (wiki).
+            Specifically, the username and password were found to be <span class="cmtt-12">root:sploitme</span>,
+            allowing an
+            attacker to log in without the need for brute-force or guessing.
+            <!--l. 333-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-1400114"></a>
+
+
+            <!--l. 335-->
+            <p class="noindent"><img src="images/optionsSET.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;14: </span><span class="content">Setting options for the
+                        attack</span></div><!--tex4ht:label?: x1-1400114 -->
+
+
+            <!--l. 337-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <!--l. 339-->
+      <p class="indent"> To exploit this, the Metasploit module was configured with the appropriate options:
+            the target port was set to <span class="cmtt-12">80</span>, and the <span class="cmtt-12">TARGETURI
+            </span>was specified as <span class="cmtt-12">/phpmyadmin/</span>. Upon
+            providing the leaked credentials, the exploit successfully authenticated and attempted to
+            deliver a Meterpreter payload.
+            <!--l. 341-->
+      <p class="indent"> This setup demonstrates how exposed or hardcoded credentials&#8212;even when
+            documented internally&#8212;can lead to full remote code execution if combined with a
+            vulnerable application like PhpMyAdmin.
+            <!--l. 343-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-1400215"></a>
+
+
+            <!--l. 345-->
+            <p class="noindent"><img src="images/at2DONE.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;15: </span><span class="content">Attack done.
+                        Meterpreter shell opened</span></div><!--tex4ht:label?: x1-1400215 -->
+
+
+            <!--l. 347-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <h5 class="subsubsectionHead"><span class="titlemark">3.4.4 </span> <a id="x1-150003.4.4"></a>Unreal IRC Service
+            (port 6607) - Remote Code Execution via Backdoored
+            Version</h5>
+      <!--l. 351-->
+      <p class="noindent">This vulnerability stems from the inclusion of a backdoor in a maliciously modified
+            version of the UnrealIRCd source package (<span class="cmtt-12">Unreal3.2.8.1.tar.gz</span>). In November
+            2009,
+            attackers replaced the original file on the official mirror with a tampered version that
+            introduced a backdoor, allowing remote command execution with the privileges of the
+            user running the IRC daemon.
+            <!--l. 353-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-1500116"></a>
+
+
+            <!--l. 355-->
+            <p class="noindent"><img src="images/optionsBACKDOOR.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;16: </span><span class="content">Options for the Unreal
+                        IRC Service attack</span></div><!--tex4ht:label?: x1-1500116 -->
+
+
+            <!--l. 357-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <!--l. 359-->
+      <p class="indent"> To exploit this, the Metasploit module <span class="cmtt-12">unix/irc/unreal</span><span
+                  class="cmtt-12">_ircd</span><span class="cmtt-12">_3281</span><span class="cmtt-12">_backdoor
+            </span>was
+            configured with the appropriate options: the RHOST was set to the target server, the
+            payload selected was <span class="cmtt-12">cmd/unix/reverse</span><span class="cmtt-12">_perl</span>, the
+            target port was defined as 6697, and
+            the LHOST was set to the attacker&#8217;s IP address (10.0.3.7). Once launched, the exploit
+            sent a crafted backdoor command to the service.
+            <!--l. 361-->
+      <p class="indent"> This scenario demonstrates how the use of compromised software&#8212;especially from
+            unverified or tampered sources&#8212;can introduce severe vulnerabilities, enabling
+            unauthenticated attackers to gain remote code execution on affected systems.
+            <!--l. 363-->
+      <p class="indent">
+            <hr class="figure">
+      <div class="figure">
+
+
+            <a id="x1-1500217"></a>
+
+
+            <!--l. 365-->
+            <p class="noindent"><img src="images/backdoorATTACK.png" alt="PIC" class="image">
+                  <br />
+            <div class="caption"><span class="id">Figure&#x00A0;17: </span><span class="content">Command execution
+                        shell</span></div><!--tex4ht:label?: x1-1500217 -->
+
+
+            <!--l. 367-->
+            <p class="indent">
+      </div>
+      <hr class="endfigure">
+      <h3 class="sectionHead"><span class="titlemark">4 </span> <a id="x1-160004"></a>Conclusion</h3>
+      <!--l. 370-->
+      <p class="noindent">Collaborating on the Metasploit Framework over the past year has been a highly
+            rewarding experience that provided me with a deeper understanding of how an
+            open-source project operates from the inside, as well as the tools and workflows needed to
+            participate effectively. In particular, I became proficient with Git and GitHub&#8212;skills that
+            have become essential for any professional in the cybersecurity and software development
+            fields.
+            <!--l. 372-->
+      <p class="indent"> Through my contributions, I integrated into an active and diverse open-source
+            community, learned to follow its guidelines, and interacted with contributors and
+            maintainers from different backgrounds. This experience allowed me to master
+            the technical and collaborative processes necessary to contribute meaningfully,
+            from creating well-structured documentation to reviewing code and suggesting
+            improvements.
+            <!--l. 374-->
+      <p class="indent"> Working with Metasploit also helped me reflect on its place in the cybersecurity
+            landscape. As mentioned by s4vitarr in a video I encountered <span class="cite">[<span
+                        class="cmbx-12">?</span>]</span>, the true challenge and
+            beauty of cybersecurity lies in creating your own modules rather than relying solely on
+            those built by others. While Metasploit makes exploitation more accessible&#8212;including to
+            people who perhaps should not have such easy access&#8212;it also serves as a powerful
+            educational tool for those willing to go deeper.
+            <!--l. 376-->
+      <p class="indent"> Beyond technical skills, this project sparked my curiosity about the wider open-source
+            ecosystem. I have since explored other projects, discovering valuable resources such as
+            The Odin Project <span class="cite">[<span class="cmbx-12">?</span>]</span>, a free platform for learning
+            web development, which has enriched
+            my skill set as a professional.
+            <!--l. 378-->
+      <p class="indent"> In summary, this internship not only allowed me to meet the stated objectives&#8212;integrating
+            into an open-source community, mastering contribution tools, and understanding
+            the implications of open-source choices&#8212;but also encouraged me to explore,
+            learn, and critically reflect on my work. The year-long collaboration has been an
+            important step in my growth as a cybersecurity practitioner and open-source
+            contributor.
+
+
+
+</body>
+
+</html>
