@@ -1,157 +1,213 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Montecatine Leads: Expertos en implementación de HubSpot CRM, automatización y optimización de ventas B2B.">
-    <title>Montecatine Leads | Consultoría CRM y Ventas</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Montecatine Leads: Desarrollo web y consultoría CRM Clientify para empresas B2B."
+    />
+    <title>Montecatine Leads | Desarrollo Web & CRM Partner</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header id="header">
+      <div class="container header-container">
+        <a href="#" class="logo">Montecatine Leads</a>
 
-    <header class="header" id="header">
-        <div class="container header-container">
-            <a href="#" class="logo">Montecatine Leads<span class="dot">.</span></a>
-            
-            <nav class="nav" id="nav-menu">
-                <ul class="nav-list">
-                    <li><a href="#servicios" class="nav-link">Servicios</a></li>
-                    <li><a href="#proceso" class="nav-link">Cómo trabajamos</a></li>
-                    <li><a href="#contacto" class="nav-link btn-nav">Contacto</a></li>
-                </ul>
-            </nav>
+        <button class="hamburger" aria-label="Abrir menú">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
-            <button class="hamburger" id="hamburger" aria-label="Abrir menú">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-        </div>
+        <nav class="nav-menu">
+          <ul>
+            <li><a href="#servicios" class="nav-link">Servicios</a></li>
+            <li><a href="#metodologia" class="nav-link">Cómo trabajamos</a></li>
+            <li><a href="#contacto" class="nav-link btn-nav">Contacto</a></li>
+          </ul>
+        </nav>
+      </div>
     </header>
 
-    <main>
-        <section class="hero" id="hero">
-            <div class="container hero-content">
-                <h1 class="hero-title">Convertimos leads en <span class="highlight">ventas reales</span></h1>
-                <p class="hero-subtitle">Optimizamos tu ecosistema comercial mediante implementación experta de HubSpot, automatización inteligente y estrategia de ventas B2B.</p>
-                <div class="hero-buttons">
-                    <a href="#contacto" class="btn btn-primary">Solicitar asesoría</a>
-                    <a href="#servicios" class="btn btn-outline">Ver servicios</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="section services" id="servicios">
-            <div class="container">
-                <h2 class="section-title">Nuestras Soluciones</h2>
-                <div class="services-grid">
-                    <article class="card">
-                        <div class="icon-box">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                        </div>
-                        <h3>Implementación CRM</h3>
-                        <p>Configuración experta de HubSpot. Migración de datos, limpieza y puesta en marcha para equipos de alto rendimiento.</p>
-                    </article>
-
-                    <article class="card">
-                        <div class="icon-box">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                        </div>
-                        <h3>Automatización B2B</h3>
-                        <p>Eliminamos tareas manuales. Workflows automatizados para nutrir leads y acelerar el ciclo de ventas.</p>
-                    </article>
-
-                    <article class="card">
-                        <div class="icon-box">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"></path><path d="M5 20V12"></path><path d="M10 20V8"></path><path d="M15 20V4"></path><path d="M20 20v-5"></path></svg>
-                        </div>
-                        <h3>Optimización de Ventas</h3>
-                        <p>Auditoría de pipelines y dashboards de seguimiento para tomar decisiones basadas en datos reales.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="section process" id="proceso">
-            <div class="container process-container">
-                <div class="process-text">
-                    <h2 class="section-title">Metodología Ágil</h2>
-                    <p class="process-intro">No solo instalamos software; transformamos la cultura de ventas de tu empresa con un enfoque estructurado.</p>
-                    
-                    <ul class="process-list">
-                        <li>
-                            <span class="step-number">01</span>
-                            <div class="step-content">
-                                <strong>Análisis Profundo</strong>
-                                <p>Auditamos tu proceso actual y detectamos cuellos de botella.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="step-number">02</span>
-                            <div class="step-content">
-                                <strong>Implementación</strong>
-                                <p>Configuración técnica y migración de datos sin fricción.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="step-number">03</span>
-                            <div class="step-content">
-                                <strong>Formación</strong>
-                                <p>Capacitamos a tu equipo para garantizar la adopción del sistema.</p>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="step-number">04</span>
-                            <div class="step-content">
-                                <strong>Optimización</strong>
-                                <p>Mejora continua basada en KPIs y resultados mensuales.</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="process-visual">
-                    <div class="abstract-box">
-                        <div class="box-layer"></div>
-                        <div class="box-content">
-                            <h3>Resultados<br>Predecibles</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section contact" id="contacto">
-            <div class="container contact-wrapper">
-                <h2 class="contact-title">Hablemos de crecimiento</h2>
-                <p class="contact-text">¿Listo para escalar tus operaciones comerciales?</p>
-                
-                <div class="contact-actions">
-                    <a href="mailto:hola@montecatineleads.com" class="contact-link">hola@montecatineleads.com</a>
-                    <a href="https://wa.me/123456789" class="btn btn-primary">Hablar por WhatsApp</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-left">
-                <p class="copyright">&copy; <script>document.write(new Date().getFullYear())</script> Montecatine Leads</p>
-            </div>
-            <div class="footer-links">
-                <a href="#">Aviso Legal</a>
-                <a href="#">Privacidad</a>
-            </div>
+    <section id="hero">
+      <div class="container hero-content">
+        <h1>Desarrollamos webs que convierten visitantes en clientes</h1>
+        <p class="subtitle">
+          Diseño web profesional y soluciones CRM para empresas que quieren
+          dejar de perder oportunidades y empezar a crecer.
+        </p>
+        <div class="cta-group">
+          <a href="#contacto" class="btn btn-primary">Solicitar asesoría</a>
+          <a href="#servicios" class="btn btn-outline">Ver servicios</a>
         </div>
+      </div>
+    </section>
+
+    <section id="servicios">
+      <div class="container">
+        <h2 class="section-title">Soluciones Tecnológicas B2B</h2>
+        <div class="grid-3">
+          <div class="card">
+            <div class="icon-box">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                />
+              </svg>
+            </div>
+            <h3>Diseño y Desarrollo Web</h3>
+            <p>
+              Webs corporativas y landing pages de alto rendimiento. Código
+              limpio enfocado en SEO técnico y velocidad de carga.
+            </p>
+          </div>
+          <div class="card">
+            <div class="icon-box">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h3>Partner Clientify</h3>
+            <p>
+              Implementación estratégica del CRM. Configuramos embudos de venta
+              y automatizaciones para nutrir tus leads.
+            </p>
+          </div>
+          <div class="card">
+            <div class="icon-box">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+            </div>
+            <h3>Integración Web + CRM</h3>
+            <p>
+              Conectamos tus formularios web directamente a Clientify. Gestión
+              automática de leads y seguimiento comercial sin fisuras.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="metodologia">
+      <div class="container split-layout">
+        <div class="text-content">
+          <h2 class="section-title">Metodología Ágil</h2>
+          <ul class="process-list">
+            <li>
+              <span class="step-number">01</span>
+              <div>
+                <h4>Análisis y Estrategia</h4>
+                <p>
+                  Auditamos tu situación actual y definimos objetivos
+                  comerciales claros.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span class="step-number">02</span>
+              <div>
+                <h4>Arquitectura Digital</h4>
+                <p>
+                  Desarrollo de la estructura web y configuración técnica del
+                  entorno.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span class="step-number">03</span>
+              <div>
+                <h4>Implementación Clientify</h4>
+                <p>
+                  Integración del CRM y conexión de flujos de datos en tiempo
+                  real.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span class="step-number">04</span>
+              <div>
+                <h4>Optimización Continua</h4>
+                <p>
+                  Soporte técnico y ajustes basados en analítica de conversión.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="visual-content">
+          <div class="abstract-ui">
+            <div class="ui-header"></div>
+            <div class="ui-body">
+              <div class="ui-row"></div>
+              <div class="ui-row short"></div>
+              <div class="ui-graph"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto">
+      <div class="container contact-wrapper">
+        <h2>Hablemos de tu proyecto</h2>
+        <p>
+          Agenda una consultoría inicial para evaluar cómo la tecnología puede
+          escalar tu negocio.
+        </p>
+        <div class="contact-actions">
+          <a href="mailto:hola@montecatineleads.com" class="contact-link"
+            >hola@montecatineleads.com</a
+          >
+          <a href="#" class="btn btn-primary">Agendar Llamada</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container footer-content">
+        <p>&copy; 2024 Montecatine Leads. Todos los derechos reservados.</p>
+        <div class="legal-links">
+          <a href="#">Aviso Legal</a>
+          <a href="#">Política de Privacidad</a>
+        </div>
+      </div>
     </footer>
 
-    <a href="https://wa.me/123456789" class="floating-whatsapp" target="_blank" aria-label="Contactar por WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+    <a
+      href="https://wa.me/123456789"
+      class="whatsapp-float"
+      target="_blank"
+      aria-label="Chat en WhatsApp"
+    >
+      <svg viewBox="0 0 24 24" fill="white" width="32" height="32">
+        <path
+          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.355-5.233 9.9 9.9 0 019.9-9.9h.004a9.9 9.9 0 019.9 9.9 9.9 9.9 0 01-9.9 9.9"
+        />
+      </svg>
     </a>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

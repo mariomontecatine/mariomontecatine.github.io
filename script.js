@@ -1,54 +1,57 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Elementos del DOM
-  const hamburger = document.getElementById("hamburger");
-  const navMenu = document.getElementById("nav-menu");
+  /* --- Menú Hamburguesa --- */
+  const hamburger = document.querySelector(".hamburger");
+  const navMenu = document.querySelector(".nav-menu");
   const navLinks = document.querySelectorAll(".nav-link");
 
-  // Función para alternar el menú
-  const toggleMenu = () => {
+  // Toggle del menú
+  hamburger.addEventListener("click", () => {
     hamburger.classList.toggle("active");
     navMenu.classList.toggle("active");
+    document.body.style.overflow = navMenu.classList.contains("active")
+      ? "hidden"
+      : "auto";
+  });
 
-    // Bloquear scroll del body cuando el menú está abierto
-    if (navMenu.classList.contains("active")) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  };
-
-  // Event Listener para el botón hamburguesa
-  hamburger.addEventListener("click", toggleMenu);
-
-  // Cerrar menú al hacer clic en un enlace
+  // Cerrar menú al hacer click en un enlace
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {
-      // Solo cerrar si está abierto (útil para móvil)
-      if (navMenu.classList.contains("active")) {
-        toggleMenu();
-      }
+      hamburger.classList.remove("active");
+      navMenu.classList.remove("active");
+      document.body.style.overflow = "auto";
     });
   });
 
-  // Cerrar menú al hacer clic fuera (Opcional, mejora UX)
-  document.addEventListener("click", (e) => {
-    if (
-      !hamburger.contains(e.target) &&
-      !navMenu.contains(e.target) &&
-      navMenu.classList.contains("active")
-    ) {
-      toggleMenu();
+  /* --- Header Sticky Effect --- */
+  const header = document.getElementById("header");
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 50) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
     }
   });
 
-  // Scroll Header Styling (Opcional)
-  // Añade una sombra extra al bajar si se desea más contraste
-  window.addEventListener("scroll", () => {
-    const header = document.getElementById("header");
-    if (window.scrollY > 50) {
-      header.style.boxShadow = "0 2px 10px rgba(0,0,0,0.05)";
-    } else {
-      header.style.boxShadow = "none";
-    }
+  /* --- Scroll Suave (Fallback para navegadores antiguos si CSS falla) --- */
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      e.preventDefault();
+      const targetId = this.getAttribute("href");
+      if (targetId === "#") return;
+
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        const headerOffset = 80; // Altura del header
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    });
   });
 });
