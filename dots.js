@@ -105,6 +105,8 @@ export function createCloud(canvas, { count = 8000, area } = {}) {
   let tiltY = 0;
   let tiltXNow = 0;
   let tiltYNow = 0;
+  let yaw = 0;
+  let yawNow = 0;
 
   let pointerX = -1e5;
   let pointerY = -1e5;
@@ -114,6 +116,9 @@ export function createCloud(canvas, { count = 8000, area } = {}) {
   let scaleTarget = 1;
   let portraitMix = 0;
   let portraitTarget = 0;
+  let crispMix = 0;
+  let crispTarget = 0;
+  let animatedScene = null;
   let started = -DURATION;
 
   function resize() {
@@ -141,13 +146,16 @@ export function createCloud(canvas, { count = 8000, area } = {}) {
   // Cambiar de escena es congelar dónde está cada punto ahora y darle un
   // destino nuevo; el reloj del viaje vuelve a cero.
   function setScene(s) {
+    animatedScene = s.update ? s : null;
     spin = calm ? 0 : s.spin || 0;
     sway = calm ? 0 : s.sway || 0;
     pitch = s.pitch || 0;
+    yaw = s.yaw || 0;
     // El retrato apenas se inclina: una cara girada deja de ser un retrato.
-    lean = calm ? 0 : s.portrait ? 0.58 : 1;
+    lean = calm ? 0 : s.lean ?? (s.portrait ? 0.58 : 1);
     scaleTarget = s.portrait ? 0.94 : 0.82;
     portraitTarget = s.portrait ? 1 : 0;
+    crispTarget = s.crisp ? 1 : 0;
     started = clock;
     for (let i = 0; i < count; i++) {
       fx[i] = x[i];
@@ -250,11 +258,13 @@ export function createCloud(canvas, { count = 8000, area } = {}) {
     const follow = 1 - Math.exp(-dt / 15);
     tiltXNow += (tiltX * lean + pitch - tiltXNow) * follow;
     tiltYNow += (tiltY * lean - tiltYNow) * follow;
+    yawNow += (yaw - yawNow) * follow;
     scale += (scaleTarget - scale) * 0.06;
     portraitMix += (portraitTarget - portraitMix) * 0.06;
+    crispMix += (crispTarget - crispMix) * 0.06;
 
     const idleSway = Math.sin(clock * 0.5) * sway;
-    const ang = spinNow + tiltYNow + idleSway;
+    const ang = spinNow + yawNow + tiltYNow + idleSway;
     const cosY = Math.cos(ang);
     const sinY = Math.sin(ang);
     const cosX = Math.cos(tiltXNow);
@@ -266,14 +276,21 @@ export function createCloud(canvas, { count = 8000, area } = {}) {
     const dotScale = Math.max(0.65, Math.min(1.45, R / 260));
     const breathe = calm ? 1 : 1 + Math.sin(clock * 0.9) * 0.012;
     const repel = w < 760 ? 60 : 85;
-    const drift = calm ? 0 : 0.006 - portraitMix * 0.0045;
+    const drift = calm ? 0 : (0.006 - portraitMix * 0.0045) * (1 - crispMix * 0.9);
 
     const T = calm ? 1 : clamp01((clock - started) / DURATION);
+    if (animatedScene) animatedScene.update(Math.max(0, clock - started - DURATION), calm);
 
     ctx.clearRect(0, 0, w, h);
     drawFloor(clock);
 
     for (let i = 0; i < count; i++) {
+      if (animatedScene && i < animatedScene.n) {
+        tx[i] = animatedScene.pos[i * 3];
+        ty[i] = animatedScene.pos[i * 3 + 1];
+        tz[i] = animatedScene.pos[i * 3 + 2];
+        ta[i] = animatedScene.alpha[i];
+      }
       const g = calm ? 1 : easeInOut(clamp01(T * (1 + STAGGER) - delay[i]));
       const bulge = Math.sin(Math.PI * g) * SWIRL;
 
@@ -326,8 +343,8 @@ export function createCloud(canvas, { count = 8000, area } = {}) {
       if (px2 < 0.3) continue;
       // El mapa del retrato ya contiene sus luces y sombras. Atenuarlo otra
       // vez como una esfera borra los rasgos; las figuras mantienen su relieve.
-      const shade = portraitMix > 0.5 ? 0 : rz < -0.1 ? 0 : rz > 0.45 ? 2 : 1;
-      const depthFloor = DEPTH_FLOOR + portraitMix * 0.55;
+      const shade = portraitMix + crispMix > 0.5 ? 0 : rz < -0.1 ? 0 : rz > 0.45 ? 2 : 1;
+      const depthFloor = DEPTH_FLOOR + Math.max(portraitMix, crispMix) * 0.55;
       ctx.globalAlpha = Math.min(1, a * (depthFloor + (1 - depthFloor) * near));
       ctx.drawImage(dots[shade], px + offset[o] - px2 / 2, py + offset[o + 1] - px2 / 2, px2, px2);
     }

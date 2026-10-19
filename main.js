@@ -205,6 +205,10 @@ $('tabs').addEventListener('keydown', (e) => {
 
 // ---- Controles ----------------------------------------------------------------
 
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') show(null);
+});
+
 $('theme').onclick = () => {
   const dark = root.dataset.theme !== 'dark';
   root.dataset.theme = dark ? 'dark' : 'light';

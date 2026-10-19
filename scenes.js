@@ -48,15 +48,16 @@ function pack(points, extra = {}) {
 
 const SIZE = 190;
 
-function sampler() {
+function sampler(size = SIZE) {
   const c = document.createElement('canvas');
-  c.width = c.height = SIZE;
+  c.width = c.height = size;
   return c.getContext('2d', { willReadFrequently: true });
 }
 
 // draw(ctx, S) pinta en blanco sobre negro; se queda con los píxeles encendidos.
-function fromDrawing(draw, { count = 2600, depth = 0, jitter = 0.5 } = {}) {
-  const ctx = sampler();
+function fromDrawing(draw, { count = 2600, depth = 0, jitter = 0.5, resolution = SIZE, weighted = false } = {}) {
+  const SIZE = resolution;
+  const ctx = sampler(SIZE);
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, SIZE, SIZE);
   ctx.fillStyle = '#fff';
@@ -70,7 +71,7 @@ function fromDrawing(draw, { count = 2600, depth = 0, jitter = 0.5 } = {}) {
   for (let y = 0; y < SIZE; y++) {
     for (let x = 0; x < SIZE; x++) {
       const v = data[(y * SIZE + x) * 4] / 255;
-      if (v > 0.35) hits.push([x, y, v]);
+      if (v > (weighted ? 0.12 : 0.35) && (!weighted || rand() < v * v)) hits.push([x, y, v]);
     }
   }
   shuffle(hits);
@@ -157,6 +158,185 @@ function sphereShell(count, radius = 0.82) {
 }
 
 const builders = {
+  focco(count) {
+    // Geometría del logo original, incluido el grosor y la base redondeada.
+    const points = fromDrawing((ctx, S) => {
+      ctx.scale(S / 1080, S / 1080);
+      ctx.lineWidth = 52;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.arc(521, 430, 214, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(663, 600);
+      ctx.lineTo(761, 752);
+      ctx.lineTo(629, 864);
+      ctx.moveTo(485, 864);
+      ctx.lineTo(773, 864);
+      ctx.stroke();
+    }, { count: Math.round(count * 0.87), resolution: 420, jitter: 0.4 });
+    for (let i = points.length; i < count; i++) {
+      const a = rand() * Math.PI * 2;
+      const r = Math.sqrt(rand()) * 57.5;
+      points.push([(468 + Math.cos(a) * r) / 540 - 1,
+        (459 + Math.sin(a) * r) / 540 - 1, -0.015, 1, 1.8]);
+    }
+    return pack(shuffle(points), { crisp: true, spin: 0.025 });
+  },
+
+  knight(count) {
+    count = Math.round(count * 1.6);
+    // Cabeza tallada con dos caras curvas y cantos; peana de revolución.
+    const S = 360;
+    const ctx = sampler(S);
+    ctx.fillStyle = '#fff';
+    const profile = new Path2D('M 114 286 C 115 252 139 232 145 204 L 146 161 L 125 173 L 92 166 L 72 147 Q 68 138 81 126 L 120 97 L 136 65 L 142 28 L 164 51 L 188 22 L 191 58 C 231 78 248 116 250 160 C 251 207 226 237 238 286 Z');
+    ctx.fill(profile);
+    // Ojo y separación de la boca, perforados en ambos lados del caballo.
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath(); ctx.ellipse(144, 105, 7, 5, -0.35, 0, Math.PI * 2); ctx.fill();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#fff';
+    ctx.beginPath(); ctx.moveTo(78, 145); ctx.lineTo(111, 149); ctx.stroke();
+    ctx.globalCompositeOperation = 'source-over';
+    const data = ctx.getImageData(0, 0, S, S).data;
+    const hits = [];
+    const edge = [];
+    const inside = (x, y) => x >= 0 && y >= 0 && x < S && y < S && data[(y * S + x) * 4 + 3] > 128;
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+      if (!inside(x, y)) continue;
+      hits.push([x, y]);
+      if (!inside(x - 2, y) || !inside(x + 2, y) || !inside(x, y - 2) || !inside(x, y + 2)) edge.push([x, y]);
+    }
+    shuffle(hits); shuffle(edge);
+    const points = [];
+    const body = Math.round(count * 0.65);
+    for (let i = 0; i < body; i++) {
+      const [x, y] = hits[i % hits.length];
+      const halfDepth = 0.11 + 0.08 * Math.sin(Math.min(1, y / 286) * Math.PI / 2);
+      const rounded = 0.8 + 0.2 * Math.cos((x - 175) / 110 * Math.PI / 2);
+      const front = i % 2 === 0;
+      points.push([(x - 175) / 155, (y - 179) / 165,
+        (front ? -1 : 1) * halfDepth * rounded, front ? 1 : 0.62, 1.65]);
+    }
+    const sides = Math.round(count * 0.13);
+    for (let i = 0; i < sides; i++) {
+      const [x, y] = edge[i % edge.length];
+      const halfDepth = 0.11 + 0.08 * Math.sin(Math.min(1, y / 286) * Math.PI / 2);
+      points.push([(x - 175) / 155, (y - 179) / 165, (rand() * 2 - 1) * halfDepth, 0.85, 1.7]);
+    }
+    const rings = [[0.65, 0.43], [0.68, 0.49], [0.73, 0.49], [0.77, 0.40], [0.83, 0.45], [0.91, 0.59], [0.98, 0.59]];
+    while (points.length < count) {
+      const segment = Math.floor(rand() * (rings.length - 1));
+      const a = rings[segment], b = rings[segment + 1];
+      const t = rand(), angle = rand() * Math.PI * 2;
+      const r = a[1] + (b[1] - a[1]) * t;
+      points.push([Math.cos(angle) * r, a[0] + (b[0] - a[0]) * t, Math.sin(angle) * r, 0.9, 1.8]);
+    }
+    return pack(shuffle(points), { yaw: -0.42, sway: 0.22, pitch: -0.05, crisp: true });
+  },
+
+  // Tokio: perfil urbano en dos planos, con huecos entre los edificios.
+  tokyo(count) {
+    const points = fromDrawing((ctx, S) => {
+      ctx.translate(S * 0.025, S * 0.19);
+      ctx.scale(S * 0.00095, S * 0.00095);
+      ctx.lineWidth = 3;
+      const base = 610;
+      const line = (coords) => {
+        ctx.beginPath();
+        coords.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+        ctx.stroke();
+      };
+      const building = (x, top, w, windows = true) => {
+        ctx.strokeRect(x, top, w, base - top);
+        if (windows) {
+          for (let y = top + 15; y < base - 8; y += 16) {
+            for (let xx = x + 9; xx < x + w - 5; xx += 13) ctx.fillRect(xx, y, 3, 5);
+          }
+        }
+      };
+      // Fondo: torres gemelas y edificios de distintas alturas.
+      ctx.globalAlpha = 0.64;
+      building(128, 435, 65);
+      building(204, 395, 47);
+      line([[226, 395], [226, 358], [230, 358], [230, 335]]);
+      building(320, 345, 68);
+      building(526, 305, 58);
+      building(603, 305, 58);
+      line([[526, 305], [551, 282], [584, 305]]);
+      line([[603, 305], [635, 282], [661, 305]]);
+      building(585, 465, 17, false);
+      building(728, 442, 43);
+      building(784, 410, 45);
+      line([[789, 410], [806, 391], [819, 410]]);
+      building(847, 381, 59);
+      line([[847, 381], [847, 364], [906, 390]]);
+      building(930, 468, 45);
+      ctx.globalAlpha = 1;
+
+      // Skytree: antena, dos plataformas y cuerpo estrecho.
+      line([[438, base], [447, 340], [452, 266], [454, 218], [461, 218], [464, 266], [469, 340], [480, base]]);
+      line([[457, 218], [457, 87]]);
+      ctx.strokeRect(453, 110, 8, 84);
+      line([[447, 272], [442, 259], [442, 247], [473, 247], [473, 259], [466, 272]]);
+      line([[446, 340], [435, 316], [434, 302], [480, 302], [479, 316], [469, 340]]);
+      line([[438, 315], [476, 315]]);
+      for (const x of [448, 457, 470]) line([[457, 340], [x, base]]);
+
+      // Torre de Tokio: patas abiertas, travesaños y antena.
+      ctx.clearRect(267, 468, 61, 142);
+      line([[257, base], [281, 552], [298, 451], [305, 367], [311, 451], [328, 552], [352, base]]);
+      line([[305, 367], [305, 261]]);
+      ctx.strokeRect(299, 365, 12, 12);
+      ctx.strokeRect(282, 477, 46, 9);
+      line([[278, 550], [332, 550]]);
+      line([[284, 537], [322, 501], [290, 501], [329, 537]]);
+      line([[271, 573], [339, 573]]);
+      line([[267, base], [305, 568], [342, base]]);
+
+      // Cocoon Tower: silueta curva y diagonales visibles.
+      ctx.clearRect(669, 390, 55, 220);
+      ctx.beginPath();
+      ctx.moveTo(693, 385);
+      ctx.bezierCurveTo(641, 459, 655, 558, 681, base);
+      ctx.lineTo(705, base);
+      ctx.bezierCurveTo(733, 550, 743, 459, 693, 385);
+      ctx.stroke();
+      line([[693, 404], [671, 482], [714, 545], [685, 602]]);
+      line([[693, 404], [718, 482], [672, 545], [702, 602]]);
+      for (let y = 459; y < base; y += 24) line([[676, y], [711, y]]);
+
+      // Primer plano: templo, puerta tradicional y pabellón ovalado.
+      const roof = (x, y, w) => {
+        ctx.clearRect(x, y, w, 20);
+        line([[x, y - 6], [x + 14, y + 5], [x + w / 2, y + 10], [x + w - 14, y + 5], [x + w, y - 6]]);
+        line([[x, y - 6], [x + 20, y + 20], [x + w - 20, y + 20], [x + w, y - 6]]);
+      };
+      ctx.clearRect(45, 512, 72, 98);
+      building(54, 545, 52, false);
+      roof(35, 534, 91);
+      roof(46, 513, 69);
+      line([[73, base], [73, 568], [88, 568], [88, base]]);
+      ctx.clearRect(150, 515, 110, 95);
+      building(162, 534, 87, false);
+      roof(143, 503, 125);
+      roof(137, 548, 137);
+      for (const x of [174, 198, 223]) ctx.strokeRect(x, 579, 14, 31);
+      ctx.clearRect(760, 536, 166, 74);
+      ctx.beginPath();
+      ctx.ellipse(842, 575, 88, 37, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      for (let x = 780; x <= 904; x += 21) {
+        line([[x, 545], [x - 7, 575], [x, 605]]);
+      }
+      line([[756, 574], [929, 574]]);
+      line([[0, base], [1000, base]]);
+    }, { count: Math.round(count * 1.6), depth: 0.045, jitter: 0.4, resolution: 480 });
+    return pack(shuffle(points.map(p => [...p, 1.6])), { sway: 0.025, crisp: true });
+  },
+
   // Círculos concéntricos: lo que focco hace con la atención.
   rings(count) {
     const points = [];
@@ -172,72 +352,148 @@ const builders = {
     return pack(shuffle(points), { spin: 0.012 });
   },
 
-  // Una ventana de navegador.
-  browser(count) {
-    return pack(
-      shuffle(
-        fromDrawing(
-          (ctx, S) => {
-            ctx.lineWidth = S * 0.028;
-            const m = S * 0.12;
-            ctx.strokeRect(m, m * 1.45, S - m * 2, S - m * 2.9);
-            ctx.beginPath();
-            ctx.moveTo(m, m * 1.45 + S * 0.13);
-            ctx.lineTo(S - m, m * 1.45 + S * 0.13);
-            ctx.stroke();
-            for (let i = 0; i < 3; i++) {
-              ctx.beginPath();
-              ctx.arc(m + S * 0.055 + i * S * 0.062, m * 1.45 + S * 0.065, S * 0.018, 0, Math.PI * 2);
-              ctx.fill();
+  // Terminal: el texto se muestrea una vez; el reloj revela cada carácter.
+  terminal(count) {
+    const budget = Math.round(count * 1.55);
+    const points = [];
+    const add = list => points.push(...list);
+    add(fromDrawing((ctx, S) => {
+      ctx.lineWidth = S * 0.006;
+      ctx.beginPath();
+      ctx.roundRect(S * 0.04, S * 0.19, S * 0.92, S * 0.61, S * 0.025);
+      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(S * 0.04, S * 0.285); ctx.lineTo(S * 0.96, S * 0.285); ctx.stroke();
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath(); ctx.arc(S * (0.085 + i * 0.035), S * 0.238, S * 0.009, 0, Math.PI * 2); ctx.fill();
+      }
+    }, { count: Math.round(budget * 0.27), resolution: 480, jitter: 0.2 }));
+
+    // Pequeño guion de tecleo y retrocesos. Cada paso conserva lo ya escrito.
+    const script = [{ at: 0, text: '' }];
+    const type = (start, prefix, text, step) => {
+      for (let i = 1; i <= text.length; i++) script.push({ at: start + (i - 1) * step, text: prefix + text.slice(0, i) });
+    };
+    type(0.35, '', '2+2 = 5', 0.14);
+    script.push({ at: 2.7, text: '2+2 = ' }, { at: 3.05, text: '2+2 = 6' },
+      { at: 4.35, text: '2+2 = ' }, { at: 4.7, text: '2+2 = 3' },
+      { at: 6.0, text: '2+2 = ' });
+    const rage = 'rasdfjdfasdasjshdfasdpa';
+    type(6.65, '2+2 = ', rage, 0.045);
+    const full = '2+2 = ' + rage;
+    for (let i = 1; i <= full.length; i++) script.push({ at: 8.4 + (i - 1) * 0.035, text: full.slice(0, -i) });
+
+    const columns = 23;
+    const slots = full.length;
+    const charWidth = 0.0332;
+    const perGlyph = Math.floor(budget * 0.68 / slots);
+    const glyphs = new Map();
+    for (const char of new Set('2+ =563' + rage)) {
+      glyphs.set(char, char === ' ' ? [] : fromDrawing((ctx, S) => {
+        ctx.font = `500 ${S * 0.055}px monospace`;
+        ctx.fillText(char, S * 0.10, S * 0.46);
+      }, { count: perGlyph, resolution: 480, jitter: 0.12 }));
+    }
+    const textStart = points.length;
+    for (let i = 0; i < slots * perGlyph; i++) points.push([-0.8, -0.08, 0, 0, 1.8]);
+    const cursorStart = points.length;
+    add(fromDrawing((ctx, S) => {
+      ctx.fillRect(S * 0.10, S * 0.412, S * 0.023, S * 0.055);
+    }, { count: 90, resolution: 480, jitter: 0.1 }));
+    const built = pack(points, { crisp: true, lean: 0.18, sway: 0.018 });
+    const cursorHome = new Float32Array(built.pos.slice(cursorStart * 3));
+    let previousText = null;
+    built.update = (elapsed, calm) => {
+      const t = calm ? 1.8 : elapsed % 10.7;
+      let frame = script[0];
+      for (const candidate of script) { if (candidate.at > t) break; frame = candidate; }
+      if (frame.text !== previousText) {
+        for (let slot = 0; slot < slots; slot++) {
+          const glyph = glyphs.get(frame.text[slot]) || [];
+          const dx = slot % columns * charWidth * 2;
+          const dy = Math.floor(slot / columns) * 0.20;
+          for (let j = 0; j < perGlyph; j++) {
+            const i = textStart + slot * perGlyph + j;
+            const p = glyph.length ? glyph[j % glyph.length] : null;
+            built.alpha[i] = p ? p[3] : 0;
+            if (p) {
+              built.pos[i * 3] = p[0] + dx;
+              built.pos[i * 3 + 1] = p[1] + dy;
             }
-            ctx.lineWidth = S * 0.02;
-            for (let i = 0; i < 4; i++) {
-              const y = m * 1.45 + S * 0.26 + i * S * 0.12;
-              ctx.beginPath();
-              ctx.moveTo(m + S * 0.08, y);
-              ctx.lineTo(m + S * 0.08 + (S * 0.6) * (i === 3 ? 0.45 : 1), y);
-              ctx.stroke();
-            }
-          },
-          { count, depth: 0.1 }
-        )
-      ),
-      { spin: 0.01 }
-    );
+          }
+        }
+        previousText = frame.text;
+      }
+      const chars = frame.text.length;
+      const active = !calm && t - frame.at < 0.2;
+      for (let i = cursorStart; i < built.n; i++) {
+        const j = (i - cursorStart) * 3;
+        built.pos[i * 3] = cursorHome[j] + chars % columns * charWidth * 2;
+        built.pos[i * 3 + 1] = cursorHome[j + 1] + Math.floor(chars / columns) * 0.20;
+        built.alpha[i] = calm || active || Math.sin(t * Math.PI * 2.4) > 0 ? 0.95 : 0;
+      }
+    };
+    return built;
   },
 
-  // Dos picos y una línea de nieve.
+  // Veleta visto desde Hoya de la Mora: perfil trazado a partir de la foto
+  // de la cara oeste, con los tajos de la cumbre y la ladera larga a la derecha.
+  // Referencia: montanaycorazon.com/pico-veleta-3396-m-sierra-nevada/
   mountain(count) {
-    return pack(
-      shuffle(
-        fromDrawing(
-          (ctx, S) => {
-            ctx.beginPath();
-            ctx.moveTo(S * 0.02, S * 0.86);
-            ctx.lineTo(S * 0.33, S * 0.26);
-            ctx.lineTo(S * 0.5, S * 0.56);
-            ctx.lineTo(S * 0.68, S * 0.14);
-            ctx.lineTo(S * 0.98, S * 0.86);
-            ctx.closePath();
-            ctx.fill();
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath();
-            ctx.moveTo(S * 0.33, S * 0.4);
-            ctx.lineTo(S * 0.44, S * 0.62);
-            ctx.lineTo(S * 0.2, S * 0.62);
-            ctx.closePath();
-            ctx.moveTo(S * 0.68, S * 0.3);
-            ctx.lineTo(S * 0.82, S * 0.56);
-            ctx.lineTo(S * 0.55, S * 0.56);
-            ctx.closePath();
-            ctx.fill();
-            ctx.globalCompositeOperation = 'source-over';
-          },
-          { count, depth: 0.3 }
-        )
-      ),
-      { spin: 0.008 }
-    );
+    const points = fromDrawing((ctx, S) => {
+      ctx.translate(S * 0.045, S * 0.12);
+      ctx.scale(S / 900, S / 600);
+      ctx.translate(-100, -130);
+      const path = (coords, fill, stroke, width = 2) => {
+        ctx.beginPath();
+        coords.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+        if (fill) { ctx.closePath(); ctx.fillStyle = fill; ctx.fill(); }
+        if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = width; ctx.stroke(); }
+      };
+      // Cumbre asimétrica, resaltes del Salón y caída de los tajos.
+      const ridge = [[108, 298], [168, 285], [214, 269], [246, 274],
+        [277, 273], [300, 255], [319, 264], [342, 258], [350, 242],
+        [365, 239], [376, 244], [381, 214], [396, 218], [411, 222],
+        [436, 220], [451, 223], [478, 238], [512, 249], [550, 258],
+        [591, 270], [633, 282], [673, 294], [714, 308], [752, 326],
+        [788, 345], [816, 365], [856, 382], [908, 414]];
+      path([...ridge, [890, 451], [812, 460], [718, 448], [638, 456],
+        [550, 439], [474, 447], [387, 421], [310, 425], [223, 401], [130, 419]], '#9b9b9b');
+      // Roca vertical bajo la cima: las dos discontinuidades son parte del perfil.
+      path([[381, 215], [400, 222], [435, 221], [420, 240], [430, 259],
+        [409, 269], [376, 266]], '#454545');
+      path([[350, 243], [367, 241], [376, 249], [374, 267], [343, 271]], '#686868');
+      // Placas y bandas de nieve que siguen la pendiente, sin casquete triangular.
+      path([[437, 224], [482, 243], [565, 266], [660, 296], [752, 335],
+        [813, 374], [779, 365], [718, 337], [650, 315], [574, 288],
+        [504, 270], [458, 251]], '#fff');
+      path([[438, 259], [506, 279], [588, 307], [657, 335], [726, 361],
+        [786, 389], [736, 378], [661, 353], [580, 328], [513, 302], [459, 287], [403, 280]], '#ededed');
+      path([[292, 280], [365, 274], [421, 283], [387, 293], [326, 291], [255, 301], [183, 307]], '#e5e5e5');
+      path([[196, 337], [270, 319], [338, 316], [405, 329], [499, 350],
+        [601, 382], [694, 414], [771, 432], [715, 432], [625, 410],
+        [521, 380], [427, 356], [347, 336], [281, 335]], '#fafafa');
+      path([[151, 388], [231, 365], [313, 357], [381, 370], [449, 390],
+        [519, 413], [455, 404], [376, 385], [308, 377], [235, 385]], '#d0d0d0');
+      // Estratos cortos y grietas, orientados como la roca de la referencia.
+      for (const seam of [
+        [[455, 247], [484, 255], [510, 262]],
+        [[473, 269], [526, 287], [548, 295]],
+        [[550, 280], [586, 292], [609, 304]],
+        [[606, 310], [654, 328], [690, 339]],
+        [[451, 306], [492, 322], [531, 333]],
+        [[701, 367], [738, 380], [764, 393]],
+        [[309, 306], [347, 302], [385, 309]],
+      ]) path(seam, null, '#202020', 3);
+      path(ridge, null, '#fff', 2.3);
+      path([[388, 231], [386, 251], [397, 257]], null, '#b5b5b5', 2);
+      path([[408, 232], [405, 247], [417, 257]], null, '#9a9a9a', 2);
+    }, { count: Math.round(count * 1.6), depth: 0, resolution: 480, jitter: 0.5, weighted: true });
+    // Relieve discreto, suficiente para separar las laderas al inclinar la nube.
+    for (const p of points) {
+      p[2] = 0.07 * Math.sin(p[0] * 5 + p[1] * 7) + p[1] * 0.08;
+      p[4] = 1.5 + rand() * 0.45;
+    }
+    return pack(shuffle(points), { crisp: true, sway: 0.055, lean: 0.4 });
   },
 
   // Nodos en una esfera y el tráfico que corre por los enlaces.

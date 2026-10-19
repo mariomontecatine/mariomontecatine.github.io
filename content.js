@@ -47,7 +47,7 @@ export const tabs = [
         title: 'focco',
         tag: { es: 'Fundador', en: 'Founder' },
         href: 'https://focco.app',
-        scene: 'rings',
+        scene: 'focco',
         line: {
           es: 'App y extensión para bloquear lo que te distrae y devolverte las horas de concentración. Diseño, código y envío.',
           en: 'An app and extension that blocks what distracts you and gives your focused hours back. Design, code and shipping.',
@@ -56,7 +56,7 @@ export const tabs = [
       {
         title: { es: 'Web freelance', en: 'Freelance web' },
         tag: { es: 'Diseño y código', en: 'Design and code' },
-        scene: 'browser',
+        scene: 'terminal',
         line: {
           es: 'Sitios para psicólogas, restaurantes y negocios locales: diseño, desarrollo y puesta en producción de principio a fin.',
           en: 'Sites for therapists, restaurants and local businesses: design, build and ship, end to end.',
@@ -91,7 +91,7 @@ export const tabs = [
         title: 'tokio',
         tag: { es: 'CLI y dashboard', en: 'CLI and dashboard' },
         href: 'https://github.com/mariomontecatine/tokio',
-        scene: 'clock',
+        scene: 'tokyo',
         line: {
           es: 'Encola prompts para agentes de código y los lanza en cuanto se reinicia la cuota, midiendo el gasto real de cada turno antes de comprometerlo.',
           en: 'Queues coding-agent prompts and fires them the moment the quota resets, metering what each turn really costs before committing it.',
@@ -101,7 +101,7 @@ export const tabs = [
         title: 'freeChessAnalyzer',
         tag: { es: 'Extensión Chrome', en: 'Chrome extension' },
         href: 'https://github.com/mariomontecatine/freeChessAnalyzer',
-        scene: 'chess',
+        scene: 'knight',
         line: {
           es: 'Exporta partidas de Chess.com a Lichess con un clic. Aprender de tus errores debería ser gratis.',
           en: 'Exports Chess.com games to Lichess in one click. Learning from your mistakes should be free.',
