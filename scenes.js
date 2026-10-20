@@ -158,7 +158,7 @@ function sphereShell(count, radius = 0.82) {
 }
 
 const builders = {
-  focco(count) {
+  attention(count) {
     // Geometría del logo original, incluido el grosor y la base redondeada.
     const points = fromDrawing((ctx, S) => {
       ctx.scale(S / 1080, S / 1080);
@@ -337,7 +337,7 @@ const builders = {
     return pack(shuffle(points.map(p => [...p, 1.6])), { sway: 0.025, crisp: true });
   },
 
-  // Círculos concéntricos: lo que focco hace con la atención.
+  // Círculos concéntricos: recuperar la atención.
   rings(count) {
     const points = [];
     const rings = [0.22, 0.42, 0.62, 0.8, 0.96];

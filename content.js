@@ -12,13 +12,13 @@ export const site = {
       en: 'From the city of the Alhambra. I studied Telecommunications Engineering at the University of Granada.',
     },
     {
-      es: 'Ahora construyo focco, una app para recuperar la atención.',
-      en: "Right now I'm building focco, an app to get your attention back.",
+      es: 'Ahora construyo *****, un dispositivo para recuperar la atención.',
+      en: "Right now I'm building *****, a device to get your attention back.",
     },
   ],
   meta: {
-    es: 'Ingeniero en Telecomunicaciones por la UGR, de Granada. Creador de focco.',
-    en: 'Telecommunications engineer from Granada, University of Granada. Building focco.',
+    es: 'Ingeniero en Telecomunicaciones por la UGR, de Granada. Creador de *****.',
+    en: 'Telecommunications engineer from Granada, University of Granada. Building *****.',
   },
   links: [
     { label: 'GitHub', href: 'https://github.com/mariomontecatine' },
@@ -44,13 +44,12 @@ export const tabs = [
     label: { es: 'Trabajo', en: 'Work' },
     items: [
       {
-        title: 'focco',
+        title: '*****',
         tag: { es: 'Fundador', en: 'Founder' },
-        href: 'https://focco.app',
-        scene: 'focco',
+        scene: 'attention',
         line: {
-          es: 'App y extensión para bloquear lo que te distrae y devolverte las horas de concentración. Diseño, código y envío.',
-          en: 'An app and extension that blocks what distracts you and gives your focused hours back. Design, code and shipping.',
+          es: 'Un dispositivo para recuperar la atención. Diseño y desarrollo.',
+          en: 'A device to get your attention back. Design and development.',
         },
       },
       {
