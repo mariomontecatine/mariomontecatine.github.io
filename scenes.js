@@ -143,6 +143,37 @@ export function portrait(img, { count = 6000 } = {}) {
   return pack(shuffle(points), { pitch: 0, spin: 0, sway: 0.13, portrait: true });
 }
 
+// ---- Logos ------------------------------------------------------------------
+
+// Los mapas de tools/build-logos.py: cuanto más blanco, más probable un punto.
+// Se sortea con semilla fija para que el logo salga siempre igual.
+export function logo(img, { count = 3000 } = {}) {
+  const W = img.naturalWidth;
+  const H = img.naturalHeight;
+  const c = document.createElement('canvas');
+  c.width = W;
+  c.height = H;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0);
+  const data = ctx.getImageData(0, 0, W, H).data;
+  const sample = seeded(4417);
+  const hits = [];
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const v = data[(y * W + x) * 4] / 255;
+      if (v > 0.08) hits.push([x + sample() - 0.5, y + sample() - 0.5, v, sample()]);
+    }
+  }
+  // Los píxeles más blancos tienen más papeletas.
+  hits.sort((a, b) => b[2] * b[3] - a[2] * a[3]);
+  const points = [];
+  for (let i = 0; i < Math.min(count, hits.length); i++) {
+    const [x, y, v] = hits[i];
+    points.push([(x / W) * 2 - 1, (y / H) * 2 - 1, (sample() - 0.5) * 0.12, 0.6 + v * 0.4]);
+  }
+  return pack(shuffle(points), { spin: 0, sway: 0.28, crisp: true });
+}
+
 // ---- Figuras ----------------------------------------------------------------
 
 function sphereShell(count, radius = 0.82) {

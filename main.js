@@ -1,81 +1,134 @@
-// Monta la página a partir de content.js y conecta cada fila con su figura.
+// Monta la página a partir de content.js: la entrada, la primera pantalla con
+// la nube de puntos sobre los proyectos y la segunda con el retrato grande.
 
 import { site, tabs } from './content.js';
 import { createCloud } from './dots.js';
-import { scene, portrait } from './scenes.js';
+import { scene, portrait, logo } from './scenes.js';
+import { createFocco } from './focco.js';
+import { runIntro } from './intro.js';
 
-// El retrato necesita muchos puntos para que se lean los rasgos; las figuras,
-// que son geometría limpia, se leen con la mitad.
-const COUNT = window.innerWidth < 760 ? 3000 : 6500;
+const narrow = window.innerWidth < 880;
+const COUNT = narrow ? 3000 : 6500;
 const SHAPE = Math.round(COUNT * 0.55);
 
 const $ = (id) => document.getElementById(id);
 const root = document.documentElement;
-const touch = matchMedia('(hover: none)').matches;
 
 let lang = root.lang === 'en' ? 'en' : 'es';
 const t = (v) => (typeof v === 'string' ? v : v[lang]);
 
-// La nube se centra en el hueco de la columna del medio, por encima del pie.
-const slot = document.querySelector('.slot');
-const stageArea = () => {
-  const r = slot.getBoundingClientRect();
-  const caption = $('caption').getBoundingClientRect().height + 14;
-  return { left: r.left, top: r.top, width: r.width, height: Math.max(160, r.height - caption) };
-};
+// ---- Las dos nubes --------------------------------------------------------------
 
-const cloud = createCloud($('stage'), { count: COUNT, area: stageArea });
+const slot = $('slot');
+const cloud = createCloud($('stage'), {
+  count: COUNT,
+  area: () => {
+    const r = slot.getBoundingClientRect();
+    if (window.innerWidth < 880) return r;
+    // En escritorio la nube aprovecha casi todo el alto del hueco.
+    return { left: r.left, top: r.top, width: r.width, height: r.height, r: Math.min(r.width / 2.3, r.height * 0.52) };
+  },
+});
 cloud.setScene(scene('rings', SHAPE)); // mientras carga la foto
 
-// Un punto oscuro sobre papel y uno claro sobre negro no dibujan lo mismo, así
-// que cada tema tiene su retrato: en claro los puntos caen sobre el pelo, en
-// oscuro sobre la piel y el pelo queda en silueta.
-const faces = { light: null, dark: null };
-const theme = () => (document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
-const home = () => faces[theme()] || scene('rings', SHAPE);
+// El personaje, en el sitio y del tamaño del de Bloub: medido allí a 1440 × 900,
+// el centro queda a 0,14 altos del borde derecho y a media altura, y el radio
+// es 0,39 altos, así que se sale por la derecha. En móvil, como allí: arriba,
+// centrada y entera, con el panel debajo (el hueco lo reserva el CSS).
+const about = $('sobre-mi');
+const focco = createFocco($('focco'), {
+  art: 'assets/starry-night.jpg',
+  place: (w, h) => {
+    if (w < 880) return { x: w / 2, y: 84 + w * 0.285, r: w * 0.285 };
+    return { x: w - h * 0.142, y: h * 0.517, r: h * 0.387 };
+  },
+});
+about.addEventListener('click', (e) => focco.poke(e.clientX, e.clientY));
 
-for (const mode of ['light', 'dark']) {
-  const photo = new Image();
-  photo.decoding = 'async';
-  photo.src = `assets/portrait-dots-${mode}.png`;
-  photo.onload = () => {
-    faces[mode] = portrait(photo, { count: COUNT });
-    if (!active && mode === theme()) cloud.setScene(home());
-  };
+let face = null;
+const home = () => face || scene('rings', SHAPE);
+const photo = new Image();
+photo.decoding = 'async';
+photo.src = 'assets/portrait-dots-dark.png';
+photo.onload = () => {
+  face = portrait(photo, { count: COUNT });
+  if (!active) cloud.setScene(home());
+};
+
+// Los logos de las webs de clientes, en puntos. Se cargan aparte; hasta
+// entonces la fila dibuja el nombre.
+const logos = {};
+for (const tab of tabs) {
+  for (const item of tab.items) {
+    if (!item.logo) continue;
+    const img = new Image();
+    img.decoding = 'async';
+    img.onload = () => {
+      logos[item.logo] = logo(img, { count: SHAPE });
+    };
+    img.src = `assets/logos/${item.logo}.png`;
+  }
 }
+const sceneFor = (item) => logos[item.logo] || scene(item.scene, SHAPE);
 
-// ---- Texto -------------------------------------------------------------------
+// ---- La pista y la descripción de cada proyecto -------------------------------
 
 const caption = $('caption');
 let active = null;
 
-function hint() {
+// Sin proyecto elegido, la descripción queda vacía.
+function clearCaption() {
   caption.classList.remove('in');
-  caption.innerHTML =
-    `<span class="hint-mouse">${site.hint.mouse[lang]}</span>` +
-    `<span class="hint-touch">${site.hint.touch[lang]}</span>`;
+  caption.innerHTML = '';
 }
 
 function show(row) {
   if (active === row) return;
   active = row;
   for (const r of document.querySelectorAll('.row')) r.classList.toggle('on', r === row);
-  for (const list of document.querySelectorAll('ol.list')) list.classList.toggle('live', !!row && list.contains(row));
 
   if (!row) {
     cloud.setScene(home());
-    hint();
+    clearCaption();
     return;
   }
 
   const item = row._item;
-  cloud.setScene(scene(item.scene, SHAPE));
+  cloud.setScene(sceneFor(item));
   caption.classList.remove('in');
   void caption.offsetWidth; // reinicia la animación
   caption.innerHTML = `<b></b><span></span>`;
   caption.querySelector('b').textContent = t(item.title);
   caption.querySelector('span').textContent = t(item.line);
+  // Los enlaces van aquí, a la vista y a propósito, nunca en la fila.
+  const links = [];
+  if (item.web) links.push({ name: t(site.visit), href: item.web });
+  if (item.href) links.push({ name: t(site.code), href: item.href });
+  for (const c of item.clients || []) links.push(c.href ? { name: `${c.name} ↗`, href: c.href } : { name: `${c.name} · ${t(site.soon)}` });
+  if (links.length) {
+    const box = document.createElement('span');
+    box.className = 'links';
+    for (const l of links) {
+      const el = document.createElement(l.href ? 'a' : 'span');
+      el.textContent = l.name;
+      if (l.href) {
+        el.href = l.href;
+        el.target = '_blank';
+        el.rel = 'noopener';
+      } else el.className = 'soon';
+      box.append(el);
+    }
+    caption.append(box);
+  }
   caption.classList.add('in');
+}
+
+// ---- Texto ---------------------------------------------------------------------
+
+function roll(el, text) {
+  el.innerHTML = '<span></span><span aria-hidden="true"></span>';
+  el.children[0].textContent = text;
+  el.children[1].textContent = text;
 }
 
 function paintText() {
@@ -83,182 +136,372 @@ function paintText() {
   document.title = site.name;
   document.querySelector('meta[name="description"]').content = site.meta[lang];
 
-  $('greet').textContent = site.hello[lang];
-  $('first').textContent = site.first;
-  $('foot').textContent = site.foot[lang];
+  $('role').textContent = t(site.role);
+  $('statement').textContent = t(site.statement);
+  $('services').textContent = t(site.services);
+  roll($('cta'), t(site.cta));
+  roll($('contact'), `${t(site.nav.contact)} ↗`);
+  // Una sola palabra: el idioma al que cambias.
+  const other = lang === 'es' ? 'en' : 'es';
+  roll($('lang'), other.toUpperCase());
+  $('lang').setAttribute('aria-label', other === 'en' ? 'Switch to English' : 'Cambiar a español');
 
-  $('bio').innerHTML = '';
-  for (const p of site.lede) {
-    const el = document.createElement('p');
-    el.textContent = p[lang];
-    $('bio').append(el);
+  $('nav').innerHTML = '';
+  for (const [href, key] of [['#proyectos', 'work'], ['#sobre-mi', 'about']]) {
+    const a = document.createElement('a');
+    a.className = 'roll';
+    a.href = href;
+    roll(a, t(site.nav[key]));
+    $('nav').append(a);
   }
 
-  $('links').innerHTML = '';
+  $('big').textContent = site.about.big;
+  paintPanel();
+  paintPlace();
+}
+
+// El panel de la segunda pantalla, a la manera de los ajustes de Bloub.
+function paintPanel() {
+  const panel = $('panel');
+  panel.innerHTML = '';
+
+  const heading = (text) => {
+    const h = document.createElement('h2');
+    h.textContent = text;
+    panel.append(h);
+  };
+
+  heading(t(site.about.contact));
+  const links = document.createElement('div');
+  links.className = 'choices contact-choices';
   for (const link of site.links) {
     const a = document.createElement('a');
+    a.className = 'choice';
     a.href = link.href;
-    a.textContent = t(link.label);
-    if (link.mail) a.dataset.mail = '';
-    else {
+    a.innerHTML = `<span></span><span class="mark" aria-hidden="true">${link.mail ? '→' : '↗'}</span>`;
+    a.firstChild.textContent = t(link.label);
+    if (!link.mail) {
       a.target = '_blank';
       a.rel = 'noopener';
     }
-    $('links').append(a);
+    links.append(a);
   }
+  panel.append(links);
 
-  const en = lang === 'en';
-  $('lang').textContent = en ? 'ES' : 'EN';
-  $('lang').setAttribute('aria-label', en ? 'Cambiar a español' : 'Switch to English');
-  const isDark = root.dataset.theme === 'dark';
-  $('theme').setAttribute(
-    'aria-label',
-    en ? (isDark ? 'Switch to light mode' : 'Switch to dark mode') : isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'
-  );
+  const play = document.createElement('div');
+  play.className = 'play';
+  const h = document.createElement('h2');
+  h.textContent = t(site.about.play);
+  const destroy = document.createElement('a');
+  destroy.className = 'destroy';
+  destroy.href = site.destroy.href;
+  destroy.target = '_blank';
+  destroy.rel = 'noopener';
+  destroy.innerHTML = `<img src="${site.destroy.badge}" alt="Destroy this website" width="180" height="40" loading="lazy" />`;
+  play.append(h, destroy);
+  panel.append(play);
+
 }
 
-// ---- Pestañas y listas --------------------------------------------------------
+// ---- Listas de proyectos -------------------------------------------------------
 
-function buildIndex() {
-  $('tabs').innerHTML = '';
-  $('panels').innerHTML = '';
+function buildLists() {
+  const lists = $('lists');
+  lists.innerHTML = '';
 
-  tabs.forEach((tab, i) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.role = 'tab';
-    button.id = `tab-${tab.id}`;
-    button.setAttribute('aria-controls', tab.id);
-    button.setAttribute('aria-selected', String(i === 0));
-    button.tabIndex = i === 0 ? 0 : -1;
-    button.innerHTML = `${tab.label[lang]}<sup>${String(tab.items.length).padStart(2, '0')}</sup>`;
-    button.onclick = () => select(i);
-    $('tabs').append(button);
-
+  for (const tab of tabs) {
+    const group = document.createElement('div');
+    group.className = 'group';
+    const h = document.createElement('h2');
+    h.className = 'mono';
+    h.textContent = t(tab.heading);
     const list = document.createElement('ol');
     list.className = 'list';
-    list.id = tab.id;
-    list.role = 'tabpanel';
-    list.setAttribute('aria-labelledby', button.id);
-    list.hidden = i !== 0;
 
-    tab.items.forEach((item, n) => {
+    for (const item of tab.items) {
       const li = document.createElement('li');
-      const row = document.createElement(item.href ? 'a' : 'button');
+      // Siempre un botón: tocarlo cambia el dibujo y no te lleva a ningún sitio.
+      const row = document.createElement('button');
+      row.type = 'button';
       row.className = 'row';
-      if (item.href) {
-        row.href = item.href;
-        row.target = '_blank';
-        row.rel = 'noopener';
-      } else {
-        row.type = 'button';
-      }
       row._item = item;
-      row.innerHTML =
-        `<span class="no">${String(n + 1).padStart(2, '0')}</span>` +
-        `<span class="name"></span>` +
-        `<span class="tag"></span>` +
-        `<span class="go" aria-hidden="true">${item.href ? '↗' : ''}</span>`;
+      row.innerHTML = `<span class="name"></span><span class="tag"></span><span class="go" aria-hidden="true"></span>`;
       row.querySelector('.name').textContent = t(item.title);
       row.querySelector('.tag').textContent = t(item.tag);
 
-      row.addEventListener('pointerenter', () => show(row));
-      row.addEventListener('focus', () => show(row));
-      // En táctil el primer toque enseña la figura; el segundo abre el enlace.
-      row.addEventListener('click', (e) => {
-        if (touch && active !== row) {
-          e.preventDefault();
-          show(row);
-        }
+      row.addEventListener('pointerenter', (e) => {
+        if (e.pointerType === 'mouse') show(row);
+      });
+      row.addEventListener('focus', () => {
+        if (row.matches(':focus-visible')) show(row);
+      });
+      row.addEventListener('click', () => {
+        show(row);
+        revealDrawing();
       });
 
       li.append(row);
       list.append(li);
-    });
+    }
 
-    list.addEventListener('pointerleave', () => {
-      if (!touch) show(null);
-    });
-    $('panels').append(list);
-  });
+    group.append(h, list);
+    lists.append(group);
+  }
+
 }
 
-function select(index) {
-  tabs.forEach((tab, i) => {
-    const button = $(`tab-${tab.id}`);
-    button.setAttribute('aria-selected', String(i === index));
-    button.tabIndex = i === index ? 0 : -1;
-    $(tab.id).hidden = i !== index;
-  });
-  show(null);
+// Al salir con el ratón de toda la columna (dibujo, descripción y listas) se
+// vuelve al retrato; así se puede ir hasta los enlaces de la descripción.
+$('proyectos').addEventListener('pointerleave', (e) => {
+  if (e.pointerType === 'mouse') show(null);
+});
+
+// En móvil el dibujo queda arriba: al tocar un proyecto, la página sube lo
+// justo para verlo cambiar, con su descripción debajo.
+function revealDrawing() {
+  if (window.innerWidth >= 880) return;
+  const r = slot.getBoundingClientRect();
+  if (r.top >= 0 && r.bottom <= window.innerHeight) return;
+  window.scrollTo({ top: window.scrollY + r.top - 64, behavior: calm ? 'auto' : 'smooth' });
 }
 
-$('tabs').addEventListener('keydown', (e) => {
-  const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-  if (!step) return;
-  e.preventDefault();
-  const current = tabs.findIndex((tab) => $(`tab-${tab.id}`).getAttribute('aria-selected') === 'true');
-  const next = (current + step + tabs.length) % tabs.length;
-  select(next);
-  $(`tab-${tabs[next].id}`).focus();
-});
-
-// ---- Controles ----------------------------------------------------------------
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') show(null);
-});
-
-$('theme').onclick = () => {
-  const dark = root.dataset.theme !== 'dark';
-  root.dataset.theme = dark ? 'dark' : 'light';
-  try {
-    localStorage.setItem('mm-theme', root.dataset.theme);
-  } catch (e) {}
-  $('theme').setAttribute('aria-pressed', String(dark));
-  document.querySelector('meta[name="theme-color"]').content = dark ? '#0e0e0f' : '#fbfbfa';
-  cloud.setTheme(dark);
-  // El retrato del otro tema está hecho al revés, así que se cambia también, y
-  // la transición de siempre se encarga de llevar los puntos de uno a otro.
-  if (!active) cloud.setScene(home());
-  paintText();
-};
-
-$('lang').onclick = () => {
-  lang = lang === 'es' ? 'en' : 'es';
+function setLang(code) {
+  if (code === lang) return;
+  lang = code;
   try {
     localStorage.setItem('mm-lang', lang);
   } catch (e) {}
-  const open = tabs.findIndex((tab) => $(`tab-${tab.id}`).getAttribute('aria-selected') === 'true');
+  active = null;
   paintText();
-  buildIndex();
-  select(Math.max(0, open));
+  buildLists();
+  cloud.setScene(home());
+  clearCaption();
+}
+
+// ---- Animaciones de la página --------------------------------------------------
+
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+// power3.out de GSAP, la curva que usa Jeremy: arranca rápido y llega muy suave.
+const SOFT = 'cubic-bezier(0.25, 1, 0.5, 1)';
+
+// La entrada tras la intro, con la misma coreografía que la web de Jeremy:
+// la descripción sube, la cabecera baja, luego la hora, y las filas entran
+// desde la derecha una detrás de otra. `fill: backwards` las tiene en su
+// sitio de salida durante la espera, y al acabar no queda ningún estilo.
+function entrance() {
+  if (calm) return;
+  const from = (el, start, duration, transform) =>
+    el?.animate([{ opacity: 0, transform }, { opacity: 1, transform: 'none' }], {
+      duration: duration * 1000,
+      delay: (0.1 + start) * 1000,
+      easing: SOFT,
+      fill: 'backwards',
+    });
+  from(document.querySelector('.statement'), 0, 0.6, 'translateY(20px)');
+  from(document.querySelector('.top'), 0.2, 0.8, 'translateY(-10px)');
+  from(document.querySelector('.cta'), 0.35, 0.5, 'translateY(20px)');
+  from(document.querySelector('.clock'), 0.5, 0.5, 'translateY(20px)');
+  from(document.querySelector('.services'), 0.6, 0.5, 'translateY(20px)');
+  const rows = document.querySelectorAll('.caption, .group h2, ol.list li');
+  rows.forEach((el, i) => from(el, 0.3 + i * 0.06, 0.5, el.matches('li') ? 'translateX(20px)' : 'translateY(20px)'));
+  $('stage').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, delay: 400, easing: SOFT, fill: 'backwards' });
+}
+
+// Cambiar de idioma: a la página le entra gravedad y todo se cae girando,
+// sin encogerse, hasta salir por abajo; después lo nuevo nace pieza a pieza, casi a
+// la vez y con suavidad.
+const PIECES = '.logo, .role, .nav > a, .end > *, .statement, .cta, .clock, .services, .caption, .group h2, ol.list li, .panel h2, .panel .choice, .panel .destroy, .big, #stage, #focco';
+const onScreen = (el) => {
+  const r = el.getBoundingClientRect();
+  return r.width > 0 && r.bottom > 0 && r.top < window.innerHeight;
 };
+let switching = false;
+
+async function switchLang() {
+  const next = lang === 'es' ? 'en' : 'es';
+  if (calm) return setLang(next);
+  if (switching) return;
+  switching = true;
+
+  const falling = [...document.querySelectorAll(PIECES)].filter(onScreen);
+  await Promise.all(
+    falling.map((el) => {
+      const r = el.getBoundingClientRect();
+      const drop = window.innerHeight - r.top + 60 + Math.random() * window.innerHeight * 0.5;
+      const spin = (Math.random() - 0.5) * 60;
+      const drift = (Math.random() - 0.5) * 120;
+      return el.animate(
+        [
+          // un saltito hacia arriba antes de caer, como quien pierde el suelo
+          { transform: 'none', opacity: 1, easing: 'cubic-bezier(0.3, 0.7, 0.4, 1)' },
+          { transform: `translate(${drift * 0.1}px, -12px) rotate(${spin * 0.08}deg)`, opacity: 1, offset: 0.14, easing: 'cubic-bezier(0.55, 0, 1, 0.45)' },
+          { transform: `translate(${drift}px, ${drop}px) rotate(${spin}deg)`, opacity: 1 },
+        ],
+        { duration: 780 + Math.random() * 260, delay: Math.random() * 160, fill: 'forwards' }
+      ).finished;
+    })
+  );
+  await wait(140);
+
+  // Lo que no se rehace (el logo, los lienzos…) vuelve a su sitio, todavía
+  // invisible, y en la misma tarea se pinta el idioma nuevo y nace todo.
+  for (const el of falling) for (const a of el.getAnimations()) a.cancel();
+  setLang(next);
+  // Nace suave: se aclara desde un desenfoque, sube un poco y crece apenas,
+  // casi todo a la vez, en una ola ligera de arriba abajo.
+  for (const el of [...document.querySelectorAll(PIECES)].filter(onScreen)) {
+    const top = Math.max(0, el.getBoundingClientRect().top) / window.innerHeight;
+    const canvas = el.tagName === 'CANVAS';
+    el.animate(
+      [
+        { opacity: 0, transform: 'translateY(16px) scale(0.94)', filter: canvas ? 'none' : 'blur(8px)' },
+        { opacity: 1, transform: 'none', filter: 'none' },
+      ],
+      { duration: canvas ? 1000 : 800, delay: top * 220 + Math.random() * 90, easing: SOFT, fill: 'backwards' }
+    );
+  }
+  await wait(1100);
+  switching = false;
+}
+
+$('lang').onclick = switchLang;
+
+// ---- La hora en Granada ----------------------------------------------------------
+
+const clockFormat = new Intl.DateTimeFormat('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: site.zone });
+
+// "UTC+1" en invierno, "UTC+2" en verano: lo dice el propio navegador.
+function offset() {
+  try {
+    const part = new Intl.DateTimeFormat('en-US', { timeZone: site.zone, timeZoneName: 'shortOffset' })
+      .formatToParts(new Date())
+      .find((p) => p.type === 'timeZoneName');
+    return part.value.replace('GMT', 'UTC');
+  } catch (e) {
+    return 'UTC+1';
+  }
+}
+
+function paintPlace() {
+  $('place').textContent = `${site.city}, ${offset()}`;
+}
+
+let shown = '';
+function tick() {
+  const now = clockFormat.format(new Date());
+  if (now === shown) return;
+  const time = $('time');
+  time.setAttribute('aria-label', now);
+  if (!shown) {
+    time.innerHTML = '';
+    for (const ch of now) {
+      const cell = document.createElement('span');
+      cell.setAttribute('aria-hidden', 'true');
+      if (ch === ':') cell.className = 'colon';
+      cell.innerHTML = '<span></span>';
+      cell.firstChild.textContent = ch;
+      time.append(cell);
+    }
+  } else {
+    // Sólo cambia la cifra que cambia, y entra rodando desde abajo.
+    [...now].forEach((ch, i) => {
+      if (shown[i] === ch) return;
+      const cell = time.children[i];
+      cell.innerHTML = '<span class="new"></span>';
+      cell.firstChild.textContent = ch;
+    });
+    paintPlace();
+  }
+  shown = now;
+}
+
+// ---- Cabecera ------------------------------------------------------------------
+
+// Arriba del todo, transparente. Al bajar se esconde; al subir vuelve con fondo.
+const header = document.querySelector('.top');
+let lastY = window.scrollY;
+let ticking = false;
+function onScroll() {
+  ticking = false;
+  const y = window.scrollY;
+  root.classList.toggle('scrolled', y > 8);
+  if (y > lastY + 6 && y > 120) header.classList.add('away');
+  else if (y < lastY - 6 || y <= 120) header.classList.remove('away');
+  lastY = y;
+}
+window.addEventListener(
+  'scroll',
+  () => {
+    if (!ticking) requestAnimationFrame(onScroll);
+    ticking = true;
+  },
+  { passive: true }
+);
+onScroll();
 
 // ---- Puntero y tamaño ---------------------------------------------------------
 
 window.addEventListener('pointermove', (e) => {
   if (e.pointerType === 'touch') return;
   cloud.pointer(e.clientX, e.clientY, true);
+  focco.pointer(e.clientX, e.clientY, true);
 });
-window.addEventListener('pointerleave', () => cloud.pointer(0, 0, false));
-window.addEventListener('blur', () => cloud.pointer(0, 0, false));
+// En móvil no hay ratón: la bolita sigue el dedo mientras tocas o arrastras.
+for (const type of ['touchstart', 'touchmove']) {
+  window.addEventListener(
+    type,
+    (e) => {
+      const f = e.touches[0];
+      if (f) focco.pointer(f.clientX, f.clientY, true);
+    },
+    { passive: true }
+  );
+}
+const leave = () => {
+  cloud.pointer(0, 0, false);
+  focco.pointer(0, 0, false);
+};
+document.documentElement.addEventListener('pointerleave', leave);
+window.addEventListener('blur', leave);
 
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') show(null);
+});
+
+const resizeAll = () => {
+  cloud.resize();
+  focco.resize();
+};
 let pending;
 window.addEventListener('resize', () => {
   clearTimeout(pending);
-  pending = setTimeout(() => cloud.resize(), 100);
+  pending = setTimeout(resizeAll, 100);
 });
-window.addEventListener('orientationchange', () => setTimeout(() => cloud.resize(), 200));
+window.addEventListener('orientationchange', () => setTimeout(resizeAll, 200));
 
 // ---- Arranque -----------------------------------------------------------------
 
-$('theme').setAttribute('aria-pressed', String(root.dataset.theme === 'dark'));
-cloud.setTheme(root.dataset.theme === 'dark');
-document.querySelector('meta[name="theme-color"]').content = root.dataset.theme === 'dark' ? '#0e0e0f' : '#fbfbfa';
 paintText();
-buildIndex();
-hint();
-cloud.resize();
-window.addEventListener('load', () => cloud.resize());
-if (document.fonts) document.fonts.ready.then(() => cloud.resize());
+buildLists();
+clearCaption();
+tick();
+setInterval(tick, 1000);
+resizeAll();
+window.addEventListener('load', resizeAll);
+if (document.fonts) document.fonts.ready.then(resizeAll);
+
+// El texto puede ocupar más líneas al seleccionar un proyecto o cambiar idioma.
+const layoutObserver = new ResizeObserver(resizeAll);
+layoutObserver.observe(slot);
+layoutObserver.observe(caption);
+layoutObserver.observe(about);
+
+// Saludos al azar, sin repetir y sin el idioma de la web: ese va al final.
+const pool = site.intro.filter(([, code]) => code !== lang).map(([word]) => word);
+for (let i = pool.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [pool[i], pool[j]] = [pool[j], pool[i]];
+}
+const finals = site.welcome[lang];
+runIntro({ words: pool.slice(0, site.introCount), last: finals[Math.floor(Math.random() * finals.length)], onDone: entrance });
