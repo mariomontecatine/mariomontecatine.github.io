@@ -49,7 +49,7 @@ function sprite(color) {
 //   floor    pinta el suelo en perspectiva.
 //   palette  colores propios; `tint(x, y, t, i)` elige uno por punto y frame.
 //   stars    cuántas estrellitas de fondo titilan detrás de la nube.
-export function createCloud(canvas, { count = 8000, area, floor = false, palette, tint, stars = 0, look = 0.34 } = {}) {
+export function createCloud(canvas, { count = 8000, area, visibilityTarget = canvas, floor = false, palette, tint, stars = 0, look = 0.34 } = {}) {
   const ctx = canvas.getContext('2d');
   // El lienzo ocupa su sección entera. Se mide la sección y no el lienzo para
   // que animarlo (caerse, aparecer) no descoloque lo que hay dentro.
@@ -302,13 +302,12 @@ export function createCloud(canvas, { count = 8000, area, floor = false, palette
 
   let last = performance.now();
   let clock = 0;
+  let frameId = null;
 
   function frame(now) {
-    requestAnimationFrame(frame);
-    if (document.hidden || !visible) {
-      last = now;
-      return;
-    }
+    frameId = null;
+    if (document.hidden || !visible) return;
+    frameId = requestAnimationFrame(frame);
 
     const dt = Math.min(64, now - last) / 16.667;
     last = now;
@@ -424,15 +423,26 @@ export function createCloud(canvas, { count = 8000, area, floor = false, palette
     ctx.globalAlpha = 1;
   }
 
-  // Fuera de pantalla no se pinta: dos nubes a la vez se notan en el portátil.
+  // Fuera de pantalla se detiene también el bucle, no sólo el dibujo.
+  function syncAnimation() {
+    if (document.hidden || !visible) {
+      if (frameId !== null) cancelAnimationFrame(frameId);
+      frameId = null;
+    } else if (frameId === null) {
+      last = performance.now();
+      frameId = requestAnimationFrame(frame);
+    }
+  }
+  document.addEventListener('visibilitychange', syncAnimation);
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-    }).observe(canvas);
+      syncAnimation();
+    }).observe(visibilityTarget);
   }
 
   resize();
-  requestAnimationFrame(frame);
+  syncAnimation();
 
   return { resize, setScene, pointer };
 }

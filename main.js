@@ -7,7 +7,7 @@ import { scene, portrait, logo } from './scenes.js';
 import { createFocco } from './focco.js';
 import { runIntro } from './intro.js';
 
-const narrow = window.innerWidth < 880;
+const narrow = window.innerWidth <= 880;
 const COUNT = narrow ? 3000 : 6500;
 const SHAPE = Math.round(COUNT * 0.55);
 
@@ -22,9 +22,10 @@ const t = (v) => (typeof v === 'string' ? v : v[lang]);
 const slot = $('slot');
 const cloud = createCloud($('stage'), {
   count: COUNT,
+  visibilityTarget: slot,
   area: () => {
     const r = slot.getBoundingClientRect();
-    if (window.innerWidth < 880) return r;
+    if (window.innerWidth <= 880) return r;
     // En escritorio la nube aprovecha casi todo el alto del hueco.
     return { left: r.left, top: r.top, width: r.width, height: r.height, r: Math.min(r.width / 2.3, r.height * 0.52) };
   },
@@ -39,7 +40,7 @@ const about = $('sobre-mi');
 const focco = createFocco($('focco'), {
   art: 'assets/starry-night.jpg',
   place: (w, h) => {
-    if (w < 880) return { x: w / 2, y: 84 + w * 0.285, r: w * 0.285 };
+    if (w <= 880) return { x: w / 2, y: 84 + w * 0.285, r: w * 0.285 };
     return { x: w - h * 0.142, y: h * 0.517, r: h * 0.387 };
   },
 });
@@ -65,6 +66,7 @@ for (const tab of tabs) {
     img.decoding = 'async';
     img.onload = () => {
       logos[item.logo] = logo(img, { count: SHAPE });
+      if (active?._item === item) cloud.setScene(sceneFor(item));
     };
     img.src = `assets/logos/${item.logo}.png`;
   }
@@ -75,11 +77,37 @@ const sceneFor = (item) => logos[item.logo] || scene(item.scene, SHAPE);
 
 const caption = $('caption');
 let active = null;
+// Se guarda el proyecto, no el botón: sobrevive al cambio de idioma.
+let pinned = null;
+const pinnedRow = () => [...$('lists').querySelectorAll('.row')].find((row) => row._item === pinned) || null;
+// Sólo se respeta el foco en la tarjeta si llega por teclado; tras pulsar un
+// enlace con el ratón, el hover tiene que seguir funcionando.
+const keyboardInCaption = () => !!caption.querySelector(':focus-visible');
+
+function paintPinned() {
+  for (const row of $('lists').querySelectorAll('.row')) row.setAttribute('aria-pressed', String(row._item === pinned));
+}
+
+function clearSelection() {
+  // Si se borra un enlace enfocado, el foco vuelve a su proyecto.
+  if (caption.contains(document.activeElement)) active?.focus({ preventScroll: true });
+  pinned = null;
+  paintPinned();
+  show(null);
+}
 
 // Sin proyecto elegido, la descripción queda vacía.
 function clearCaption() {
   caption.classList.remove('in');
   caption.innerHTML = '';
+  setSlotHeight('');
+}
+
+// Si cambia el alto del hueco, la nube se recoloca para no quedar descuadrada.
+function setSlotHeight(h) {
+  if (slot.style.height === h) return;
+  slot.style.height = h;
+  cloud.resize();
 }
 
 function show(row) {
@@ -145,6 +173,8 @@ function paintText() {
   const other = lang === 'es' ? 'en' : 'es';
   roll($('lang'), other.toUpperCase());
   $('lang').setAttribute('aria-label', other === 'en' ? 'Switch to English' : 'Cambiar a español');
+  $('nav').setAttribute('aria-label', lang === 'es' ? 'Secciones' : 'Sections');
+  document.querySelector('.logo').setAttribute('aria-label', `Mario Montecatine, ${lang === 'es' ? 'inicio' : 'home'}`);
 
   $('nav').innerHTML = '';
   for (const [href, key] of [['#proyectos', 'work'], ['#sobre-mi', 'about']]) {
@@ -207,6 +237,7 @@ function paintPanel() {
 
 function buildLists() {
   const lists = $('lists');
+  active = null;
   lists.innerHTML = '';
 
   for (const tab of tabs) {
@@ -225,19 +256,30 @@ function buildLists() {
       row.type = 'button';
       row.className = 'row';
       row._item = item;
+      row.setAttribute('aria-pressed', String(item === pinned));
+      row.setAttribute('aria-controls', 'caption');
       row.innerHTML = `<span class="name"></span><span class="tag"></span><span class="go" aria-hidden="true"></span>`;
       row.querySelector('.name').textContent = t(item.title);
       row.querySelector('.tag').textContent = t(item.tag);
 
       row.addEventListener('pointerenter', (e) => {
-        if (e.pointerType === 'mouse') show(row);
+        if (e.pointerType === 'mouse' && !keyboardInCaption()) show(row);
+      });
+      row.addEventListener('pointerleave', (e) => {
+        if (e.pointerType === 'mouse' && pinned && !keyboardInCaption()) show(pinnedRow());
       });
       row.addEventListener('focus', () => {
         if (row.matches(':focus-visible')) show(row);
       });
-      row.addEventListener('click', () => {
-        show(row);
-        revealDrawing();
+      row.addEventListener('click', (e) => {
+        pinned = pinned === item ? null : item;
+        paintPinned();
+        show(pinned ? row : null);
+        if (pinned) {
+          revealDrawing();
+          // Al activar con teclado, Tab continúa por los enlaces de la tarjeta.
+          if (e.detail === 0) caption.focus({ preventScroll: true });
+        }
       });
 
       li.append(row);
@@ -247,22 +289,42 @@ function buildLists() {
     group.append(h, list);
     lists.append(group);
   }
-
+  show(pinnedRow());
 }
 
-// Al salir con el ratón de toda la columna (dibujo, descripción y listas) se
-// vuelve al retrato; así se puede ir hasta los enlaces de la descripción.
+// La previsualización vuelve al fijado; los enlaces enfocados se conservan.
 $('proyectos').addEventListener('pointerleave', (e) => {
-  if (e.pointerType === 'mouse') show(null);
+  if (e.pointerType === 'mouse' && !keyboardInCaption()) show(pinnedRow());
+});
+$('proyectos').addEventListener('focusout', (e) => {
+  if (!$('proyectos').contains(e.relatedTarget)) show(pinnedRow());
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#proyectos, #lang')) clearSelection();
 });
 
-// En móvil el dibujo queda arriba: al tocar un proyecto, la página sube lo
-// justo para verlo cambiar, con su descripción debajo.
+// En ventanas bajas, el dibujo cede espacio a la frase y los enlaces.
+function fitDrawing() {
+  if (window.innerWidth > 880 || !active) return setSlotHeight('');
+  // Se mide el alto natural del hueco y sólo se recorta si no cabe todo.
+  const before = slot.style.height;
+  slot.style.height = '';
+  const natural = slot.offsetHeight;
+  slot.style.height = before;
+  const inset = document.querySelector('.top').offsetHeight + 12;
+  const room = Math.round(window.innerHeight - inset - caption.offsetHeight - 24);
+  setSlotHeight(room < natural ? `${Math.max(120, room)}px` : '');
+}
+
+// Al tocar un proyecto, se ven juntos el dibujo, la frase y los enlaces.
 function revealDrawing() {
-  if (window.innerWidth >= 880) return;
+  if (window.innerWidth > 880) return;
+  fitDrawing();
+  const inset = document.querySelector('.top').offsetHeight + 12;
   const r = slot.getBoundingClientRect();
-  if (r.top >= 0 && r.bottom <= window.innerHeight) return;
-  window.scrollTo({ top: window.scrollY + r.top - 64, behavior: calm ? 'auto' : 'smooth' });
+  const bottom = caption.getBoundingClientRect().bottom;
+  if (r.top >= inset && bottom <= window.innerHeight - 12) return;
+  window.scrollTo({ top: Math.max(0, window.scrollY + r.top - inset), behavior: calm ? 'auto' : 'smooth' });
 }
 
 function setLang(code) {
@@ -271,11 +333,12 @@ function setLang(code) {
   try {
     localStorage.setItem('mm-lang', lang);
   } catch (e) {}
-  active = null;
   paintText();
   buildLists();
-  cloud.setScene(home());
-  clearCaption();
+  if (!pinned) {
+    cloud.setScene(home());
+    clearCaption();
+  } else revealDrawing();
 }
 
 // ---- Animaciones de la página --------------------------------------------------
@@ -466,7 +529,7 @@ document.documentElement.addEventListener('pointerleave', leave);
 window.addEventListener('blur', leave);
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') show(null);
+  if (e.key === 'Escape') clearSelection();
 });
 
 const resizeAll = () => {
@@ -476,7 +539,10 @@ const resizeAll = () => {
 let pending;
 window.addEventListener('resize', () => {
   clearTimeout(pending);
-  pending = setTimeout(resizeAll, 100);
+  pending = setTimeout(() => {
+    fitDrawing();
+    resizeAll();
+  }, 100);
 });
 window.addEventListener('orientationchange', () => setTimeout(resizeAll, 200));
 

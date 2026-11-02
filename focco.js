@@ -270,12 +270,11 @@ export function createFocco(canvas, { art, place }) {
   }
 
   let last = performance.now();
+  let frameId = null;
   function frame(ms) {
-    requestAnimationFrame(frame);
-    if (document.hidden || !visible) {
-      last = ms;
-      return;
-    }
+    frameId = null;
+    if (document.hidden || !visible) return;
+    frameId = requestAnimationFrame(frame);
     const dt = Math.min(64, ms - last) / 16.667;
     last = ms;
     const t = now();
@@ -337,13 +336,26 @@ export function createFocco(canvas, { art, place }) {
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
+  // Al ocultarse el personaje o la pestaña, se cancela el siguiente frame.
+  function syncAnimation() {
+    if (document.hidden || !visible) {
+      if (frameId !== null) cancelAnimationFrame(frameId);
+      frameId = null;
+    } else if (frameId === null) {
+      last = performance.now();
+      lastScroll = window.scrollY;
+      frameId = requestAnimationFrame(frame);
+    }
+  }
+  document.addEventListener('visibilitychange', syncAnimation);
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
+      syncAnimation();
     }).observe(canvas);
   }
 
   resize();
-  requestAnimationFrame(frame);
+  syncAnimation();
   return { resize, pointer, poke };
 }
