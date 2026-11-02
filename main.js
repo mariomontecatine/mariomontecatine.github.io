@@ -505,11 +505,30 @@ onScroll();
 
 // ---- Puntero y tamaño ---------------------------------------------------------
 
+// Última posición del ratón en la ventana. Al hacer scroll con el touchpad la
+// página se mueve bajo un ratón quieto, así que se vuelve a apuntar con ella.
+let mouse = null;
 window.addEventListener('pointermove', (e) => {
   if (e.pointerType === 'touch') return;
-  cloud.pointer(e.clientX, e.clientY, true);
-  focco.pointer(e.clientX, e.clientY, true);
+  mouse = { x: e.clientX, y: e.clientY };
+  cloud.pointer(mouse.x, mouse.y, true);
+  focco.pointer(mouse.x, mouse.y, true);
 });
+let aiming = false;
+window.addEventListener(
+  'scroll',
+  () => {
+    if (!mouse || aiming) return;
+    aiming = true;
+    requestAnimationFrame(() => {
+      aiming = false;
+      if (!mouse) return;
+      cloud.pointer(mouse.x, mouse.y, true);
+      focco.pointer(mouse.x, mouse.y, true);
+    });
+  },
+  { passive: true }
+);
 // En móvil no hay ratón: la bolita sigue el dedo mientras tocas o arrastras.
 for (const type of ['touchstart', 'touchmove']) {
   window.addEventListener(
@@ -522,6 +541,7 @@ for (const type of ['touchstart', 'touchmove']) {
   );
 }
 const leave = () => {
+  mouse = null;
   cloud.pointer(0, 0, false);
   focco.pointer(0, 0, false);
 };
