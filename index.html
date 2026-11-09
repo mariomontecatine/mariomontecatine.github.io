@@ -26,6 +26,16 @@
         document.documentElement.lang = lang === 'en' ? 'en' : 'es';
       } catch (e) {}
     </script>
+    <!-- El cursor de la bolita (cursor.js): con ratón, la flecha se esconde desde
+         el principio para que no asome mientras carga. Si cursor.js no llega en 4 s, vuelve. -->
+    <script>
+      if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        document.documentElement.classList.add('cursor-focco-activo');
+        setTimeout(function () {
+          if (!window.cursorFocco) document.documentElement.classList.remove('cursor-focco-activo');
+        }, 4000);
+      }
+    </script>
     <style>
       :root {
         /* Márgenes de la web de Jeremy: 24 px, y 128 px en pantallas muy anchas. */
@@ -838,6 +848,136 @@
         padding: 40px var(--gutter);
         background: var(--bg);
       }
+
+      /* ---- El cursor de la bolita (cursor.js) ----
+         La bola del logo sin el soporte, con el ojo que mira hacia donde va el
+         ratón. El mismo que en la web de *****. Solo con ratón o trackpad. La
+         flecha de siempre solo se esconde con .cursor-focco-activo en <html>,
+         que ponen el script del <head> y cursor.js. Las medidas, del logo: el
+         aro de 52 de grueso con radio 214 y la pupila de 57,6, a 28 px de ancho. */
+
+      @media (hover: hover) and (pointer: fine) {
+        html.cursor-focco-activo,
+        html.cursor-focco-activo * {
+          cursor: none !important;
+        }
+        /* Donde se escribe, el cursor de escribir. */
+        html.cursor-focco-activo
+          :is(
+            input:not([type='checkbox'], [type='radio'], [type='submit'], [type='button'], [type='range'], [type='color'], [type='file']),
+            textarea,
+            [contenteditable=''],
+            [contenteditable='true']
+          ) {
+          cursor: text !important;
+        }
+      }
+
+      .cursor-focco {
+        --cursor-tam: 28px;
+        --escala: 1;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 2147483000;
+        width: 0;
+        height: 0;
+        pointer-events: none;
+        /* Blanco que invierte lo que tiene debajo: blanco sobre el negro, negro
+           sobre las filas encendidas y del color contrario sobre el cuadro. */
+        color: #fff;
+        mix-blend-mode: difference;
+        opacity: 0;
+        transition: opacity 0.2s;
+        will-change: transform;
+      }
+
+      .cursor-focco.is-visible {
+        opacity: 1;
+      }
+
+      .cursor-focco.is-escribir {
+        opacity: 0;
+      }
+
+      .cursor-focco__cuerpo {
+        position: absolute;
+        left: calc(var(--cursor-tam) / -2);
+        top: calc(var(--cursor-tam) / -2);
+        width: var(--cursor-tam);
+        height: var(--cursor-tam);
+        transform: scale(var(--escala));
+        transition: transform 0.25s cubic-bezier(0.3, 1.5, 0.5, 1);
+      }
+
+      .cursor-focco svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .cursor-focco circle {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 5.2;
+      }
+
+      .cursor-focco__mirada {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+      }
+
+      .cursor-focco__pupila {
+        position: absolute;
+        width: 6.7px;
+        height: 6.7px;
+        left: -3.35px;
+        top: -3.35px;
+        border-radius: 50%;
+        background: currentColor;
+        transition: scale 0.25s;
+      }
+
+      /* Quieto, mira a un lado y vuelve, despacio. */
+      .cursor-focco.is-mirando .cursor-focco__mirada {
+        transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.3, 1);
+      }
+
+      /* Sobre lo que se pulsa: más grande y con la pupila dilatada. */
+      .cursor-focco.is-pulsable {
+        --escala: 1.45;
+      }
+
+      .cursor-focco.is-pulsable .cursor-focco__pupila {
+        scale: 1.3;
+      }
+
+      /* Al hacer clic se encoge un poco y parpadea. */
+      .cursor-focco.is-pulsado .cursor-focco__cuerpo {
+        transform: scale(calc(var(--escala) * 0.82));
+        transition-duration: 0.1s;
+      }
+
+      .cursor-focco.is-parpadeo .cursor-focco__pupila {
+        animation: cursor-focco-parpadeo 0.18s ease-in-out;
+      }
+
+      @keyframes cursor-focco-parpadeo {
+        45% {
+          transform: scaleY(0.12);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .cursor-focco,
+        .cursor-focco * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -891,5 +1031,7 @@
     </noscript>
 
     <script type="module" src="main.js"></script>
+    <!-- El cursor de la bolita: el ojo que sigue al ratón (solo con ratón) -->
+    <script type="module" src="cursor.js"></script>
   </body>
 </html>
